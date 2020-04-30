@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +32,6 @@ import co.lujun.androidtagview.TagContainerLayout;
 public class GroupSwipeFragment extends SwipeFragment {
     private GroupSwipeViewModel mViewModel;
     private int userId;
-    private GestureDetectorCompat gestureDetectorCompat;
 
     private boolean isInit = true;
 

@@ -22,19 +22,40 @@
         />
 
     <TextView
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/annehmen"
+        android:textSize="15sp"
+        tools:ignore="RelativeOverlap" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/ablehnen"
+        android:textColor="#EC1515"
+        android:textSize="15sp" />
+
+    <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:text="Name"
+        android:text="@string/nachname"
         android:textSize="30sp" />
 
     <TextView
         android:id="@+id/firstname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="First Name"
+        android:text="@string/vorname"
         android:textSize="30sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/name"/>
@@ -43,7 +64,7 @@
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="description"
+        android:text="@string/beschreibung"
         android:textSize="30sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/circularProgressbar"/>

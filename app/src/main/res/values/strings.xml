@@ -12,4 +12,23 @@
     <string name="home">Home</string>
     <string name="swipe">Swipe</string>
     <string name="matches">Matches</string>
+    <string name="aktuell_auf_der_suche_nach_teilnehmer">Aktuell auf der Suche nach Teilnehmer</string>
+    <string name="gruppen_name">Gruppen Name</string>
+    <string name="e_mail_adresse">E-Mail-Adresse</string>
+    <string name="telefonnummer">Telefonnummer</string>
+    <string name="beschreibe_deine_gruppe">Beschreibe deine Gruppe</string>
+    <string name="neuen_tag_hinzuf_gen">Neuen Tag hinzufügen</string>
+    <string name="plus">+</string>
+    <string name="abbrechen">Abbrechen</string>
+    <string name="speichern">Speichern</string>
+    <string name="name">Name</string>
+    <string name="beschreibung">Beschreibung</string>
+    <string name="meine_gruppen">Meine Gruppen</string>
+    <string name="neue_gruppe">Neue Gruppe</string>
+    <string name="aktuell_auf_der_suche_nach_einer_gruppe">Aktuell auf der Suche nach einer Gruppe</string>
+    <string name="nachname">Nachname</string>
+    <string name="vorname">Vorname</string>
+    <string name="beschreibe_dich">Beschreibe dich</string>
+    <string name="ablehnen"><![CDATA[< Ablehnen]]></string>
+    <string name="annehmen"><![CDATA[Annehmen >]]></string>
 </resources>

@@ -12,7 +12,7 @@
         android:paddingLeft="8dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:text="Your Matches:"
+        android:text="Deine Matches:"
         android:textColor="@color/Text"/>
 
     <View

@@ -1,10 +1,8 @@
 package com.example.lfg_source.main.swipe;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -17,7 +15,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
-import com.example.lfg_source.animation.DetectSwipeGestureListener;
 import com.example.lfg_source.entity.AnswerEntity;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
@@ -25,19 +22,12 @@ import com.example.lfg_source.rest.RestClientAnswerPost;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import co.lujun.androidtagview.TagContainerLayout;
 
 public class UserSwipeFragment extends SwipeFragment {
     private Group groupThatSearches;
-    private GestureDetectorCompat gestureDetectorCompat;
-    private TextView name;
     private TextView firstName;
-    private TextView description;
-    private TagContainerLayout mTagContainerLayout;
-    private Drawable drawable;
-    private ProgressBar mProgress;
     private UserSwipeViewModel mViewModel;
     private List<User> usersToSwipe = new ArrayList<>();
     private boolean isInit = true;

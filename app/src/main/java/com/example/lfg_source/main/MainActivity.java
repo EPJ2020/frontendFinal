@@ -34,17 +34,18 @@ public class MainActivity extends AppCompatActivity {
 
         loggedInUser = new User();
         loggedInUser.setActive(true);
-        loggedInUser.setLastName("Tulpenmus");
-        loggedInUser.setFirstName("Bernard");
-        loggedInUser.setDescription("Ich bin de Bernie");
-        loggedInUser.setId(2);
+        loggedInUser.setId(1);
+        loggedInUser.setLastName("Deller");
+        loggedInUser.setFirstName("Kaniel");
+        loggedInUser.setEmail("ggg@ggg.ch");
         ArrayList<String> tags = new ArrayList<>();
-        tags.add("Joggen");
-        tags.add("Wasserski");
-        tags.add("Tauchen");
+        tags.add("matchesAll");
+        tags.add("laufen");
+        tags.add("gaertnern");
+        tags.add("c++");
+        tags.add("blah");
         loggedInUser.setTags(tags);
-        loggedInUser.setEmail("bernie@tulpenmus.ch");
-        loggedInUser.setPhone("02938492389");
+        loggedInUser.setPhone("0773736366");
 
         homeFragment = new HomeFragment(loggedInUser);
 

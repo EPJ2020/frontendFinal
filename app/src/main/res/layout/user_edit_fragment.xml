@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:shadowColor="@color/colorPrimary"
-            android:text="auf der Suche nach einer Gruppe"
+            android:text="@string/aktuell_auf_der_suche_nach_einer_gruppe"
             android:textColor="@color/Text" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -31,7 +31,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nachname"
+                android:hint="@string/nachname"
                 android:inputType="textPersonName"
                 android:textColor="@color/Text"
                 android:textColorHighlight="@color/colorPrimary"
@@ -51,7 +51,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Vorname"
+                android:hint="@string/vorname"
                 android:inputType="textPersonName"
                 android:textColor="@color/Text"
                 android:textColorHighlight="@color/colorPrimary"
@@ -71,7 +71,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email Adresse"
+                android:hint="@string/e_mail_adresse"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/Text"
                 android:textColorHighlight="@color/colorPrimary"
@@ -91,7 +91,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Telefonnummer"
+                android:hint="@string/telefonnummer"
                 android:inputType="phone"
                 android:textColor="@color/Text"
                 android:textColorHighlight="@color/colorPrimary"
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start|top"
-                android:hint="Beschreibe dich"
+                android:hint="@string/beschreibe_dich"
                 android:inputType="textMultiLine"
                 android:textColor="@color/Text"
                 android:textColorHighlight="@color/colorPrimary"
@@ -132,7 +132,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="neuer Tag"
+                android:hint="@string/neuen_tag_hinzuf_gen"
                 android:inputType="textPersonName"
                 android:textColor="@color/Text"
                 android:textColorHighlight="@color/colorPrimary"
@@ -148,7 +148,7 @@
             android:layout_below="@+id/description"
             android:layout_alignParentEnd="true"
             android:layout_margin="8dp"
-            android:text="+" />
+            android:text="@string/plus" />
 
         <co.lujun.androidtagview.TagContainerLayout
             android:id="@+id/tagcontainerLayout"
@@ -179,7 +179,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="8dp"
-            android:text="Abbrechen" />
+            android:text="@string/abbrechen" />
 
         <Button
             android:id="@+id/save_button"
@@ -188,7 +188,7 @@
             android:layout_below="@+id/tagcontainerLayout"
             android:layout_alignParentEnd="true"
             android:layout_margin="8dp"
-            android:text="Speichern" />
+            android:text="@string/speichern" />
     </RelativeLayout>
 
 
