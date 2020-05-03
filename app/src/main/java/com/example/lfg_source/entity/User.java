@@ -5,99 +5,112 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 
 public class User {
-    @JsonProperty("userId")
-    private Integer id;
-    @JsonProperty("lastName")
-    private String lastName;
-    @JsonProperty("firstName")
-    private String firstName;
-    @JsonProperty("email")
-    private String email;
-    @JsonProperty("phoneNumber")
-    private String phone;
-    @JsonProperty("description")
-    private String description;
-    @JsonProperty("tags")
-    private ArrayList<String> tags;
-    @JsonProperty("active")
-    private boolean active;
+  @JsonProperty("userId")
+  private Integer id;
 
-    public User() {
-        this.id = 0;
-    }
+  @JsonProperty("lastName")
+  private String lastName;
 
-    public Integer getId() {
-        return id;
-    }
+  @JsonProperty("firstName")
+  private String firstName;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  @JsonProperty("email")
+  private String email;
 
-    public String getLastName() {
-        return lastName;
-    }
+  @JsonProperty("phoneNumber")
+  private String phone;
 
-    public void setLastName(String name) {
-        this.lastName = name;
-    }
+  @JsonProperty("description")
+  private String description;
 
-    public String getFirstName() {
-        return firstName;
-    }
+  @JsonProperty("tags")
+  private ArrayList<String> tags;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  @JsonProperty("active")
+  private boolean active;
 
-    public String getEmail() {
-        return email;
-    }
+  public User() {
+    this.id = 0;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public void setLastName(String name) {
+    this.lastName = name;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public ArrayList<String> getTags() {
-        return tags;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public void setTags(ArrayList<String> tags) {
-        this.tags = tags;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public boolean getActive() {
-        return active;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public void changeAttributes(String description, boolean active, String firstName,
-                                 String phone, String lastName, String email, ArrayList<String> tags) {
-        this.description = description;
-        this.active = active;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.tags = tags;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public ArrayList<String> getTags() {
+    return tags;
+  }
+
+  public void setTags(ArrayList<String> tags) {
+    this.tags = tags;
+  }
+
+  public boolean getActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
+  public void changeAttributes(
+      String description,
+      boolean active,
+      String firstName,
+      String phone,
+      String lastName,
+      String email,
+      ArrayList<String> tags) {
+    this.description = description;
+    this.active = active;
+    this.email = email;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.phone = phone;
+    this.tags = tags;
+  }
 }
