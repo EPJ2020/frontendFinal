@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.AnswerEntity;
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.rest.RestClientAnswerPost;
 
 import java.util.ArrayList;
 import java.util.List;

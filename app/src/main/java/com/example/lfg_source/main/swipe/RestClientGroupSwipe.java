@@ -1,9 +1,9 @@
-package com.example.lfg_source.rest;
+package com.example.lfg_source.main.swipe;
 
 import android.os.AsyncTask;
 
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.main.home.HomeViewModel;
+import com.example.lfg_source.main.swipe.GroupSwipeViewModel;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,11 +15,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RestClientHome extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
-  public HomeViewModel homeViewModel;
+public class RestClientGroupSwipe extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
+  public GroupSwipeViewModel swipeViewModel;
 
-  public void setHomeViewModel(HomeViewModel homeViewModel) {
-    this.homeViewModel = homeViewModel;
+  public RestClientGroupSwipe(GroupSwipeViewModel swipeViewModel) {
+    this.swipeViewModel = swipeViewModel;
   }
 
   @Override
@@ -28,8 +28,10 @@ public class RestClientHome extends AsyncTask<String, Void, ResponseEntity<Group
     RestTemplate restTemplate = new RestTemplate();
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
       HttpHeaders headers = new HttpHeaders();
       HttpEntity<String> entity = new HttpEntity<String>(headers);
+
       ResponseEntity<Group[]> response = restTemplate.getForEntity(url, Group[].class);
       return response;
     } catch (Exception e) {
@@ -39,9 +41,7 @@ public class RestClientHome extends AsyncTask<String, Void, ResponseEntity<Group
   }
 
   protected void onPostExecute(ResponseEntity<Group[]> result) {
-    if (result != null) {
-      HttpStatus statusCode = result.getStatusCode();
-      homeViewModel.setData(new ArrayList<Group>(Arrays.asList(result.getBody())));
-    }
+    HttpStatus statusCode = result.getStatusCode();
+    swipeViewModel.setData(new ArrayList<Group>(Arrays.asList(result.getBody())));
   }
 }

@@ -1,8 +1,8 @@
-package com.example.lfg_source.rest;
+package com.example.lfg_source.main.match;
 
 import android.os.AsyncTask;
 
-import com.example.lfg_source.entity.User;
+import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.main.match.MatchViewModel;
 
 import org.springframework.http.HttpEntity;
@@ -15,15 +15,17 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RestClientMatchUser extends AsyncTask<String, Void, ResponseEntity<User[]>> {
+public class RestClientMatchGroup extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
   public MatchViewModel swipeViewModel;
+  private boolean isAdmin = false;
 
-  public RestClientMatchUser(MatchViewModel swipeViewModel) {
+  public RestClientMatchGroup(MatchViewModel swipeViewModel, boolean isAdmin) {
     this.swipeViewModel = swipeViewModel;
+    this.isAdmin = isAdmin;
   }
 
   @Override
-  protected ResponseEntity<User[]> doInBackground(String... uri) {
+  protected ResponseEntity<Group[]> doInBackground(String... uri) {
     final String url = uri[0];
     RestTemplate restTemplate = new RestTemplate();
     try {
@@ -32,7 +34,7 @@ public class RestClientMatchUser extends AsyncTask<String, Void, ResponseEntity<
       HttpHeaders headers = new HttpHeaders();
       HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-      ResponseEntity<User[]> response = restTemplate.getForEntity(url, User[].class);
+      ResponseEntity<Group[]> response = restTemplate.getForEntity(url, Group[].class);
       return response;
     } catch (Exception e) {
       String message = e.getMessage();
@@ -40,8 +42,12 @@ public class RestClientMatchUser extends AsyncTask<String, Void, ResponseEntity<
     }
   }
 
-  protected void onPostExecute(ResponseEntity<User[]> result) {
+  protected void onPostExecute(ResponseEntity<Group[]> result) {
     HttpStatus statusCode = result.getStatusCode();
-    swipeViewModel.setDataUser(new ArrayList<User>(Arrays.asList(result.getBody())));
+    if (isAdmin) {
+      swipeViewModel.setDataGroupAdmin(new ArrayList<Group>(Arrays.asList(result.getBody())));
+    } else {
+      swipeViewModel.setDataGroup(new ArrayList<Group>(Arrays.asList(result.getBody())));
+    }
   }
 }

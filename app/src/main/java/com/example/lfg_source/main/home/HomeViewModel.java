@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.rest.RestClientHome;
 
 import java.util.List;
 
