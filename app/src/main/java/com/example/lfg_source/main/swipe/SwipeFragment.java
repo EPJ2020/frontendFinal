@@ -20,70 +20,71 @@ import java.util.Objects;
 import co.lujun.androidtagview.TagContainerLayout;
 
 public class SwipeFragment extends Fragment {
-    private TextView name;
-    private TextView description;
-    private TagContainerLayout mTagContainerLayout;
-    private Drawable drawable;
-    private ProgressBar mProgress;
+  private TextView name;
+  private TextView description;
+  private TagContainerLayout mTagContainerLayout;
+  private Drawable drawable;
+  private ProgressBar mProgress;
 
-    private GestureDetectorCompat gestureDetectorCompat;
+  private GestureDetectorCompat gestureDetectorCompat;
 
-    protected void getViewElements(View view){
-        name = view.findViewById(R.id.name);
-        description = view.findViewById(R.id.description);
-        mTagContainerLayout = view.findViewById(R.id.tagcontainerLayout);
+  protected void getViewElements(View view) {
+    name = view.findViewById(R.id.name);
+    description = view.findViewById(R.id.description);
+    mTagContainerLayout = view.findViewById(R.id.tagcontainerLayout);
 
-        mProgress = view.findViewById(R.id.circularProgressbar);
-        Resources res = getResources();
-        drawable = res.getDrawable(R.drawable.circular);
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetectorCompat.onTouchEvent(event);
-                return true;
-            }
+    mProgress = view.findViewById(R.id.circularProgressbar);
+    Resources res = getResources();
+    drawable = res.getDrawable(R.drawable.circular);
+    view.setOnTouchListener(
+        new View.OnTouchListener() {
+          @Override
+          public boolean onTouch(View v, MotionEvent event) {
+            gestureDetectorCompat.onTouchEvent(event);
+            return true;
+          }
         });
+  }
+
+  public void setInterested(boolean value) {
+    // TODO Funtioniert noch nicht -> Fix
+    int userId = getUserId();
+    int groupId = getGroupId();
+
+    if (userId != -1 && groupId != -1) {
+      AnswerEntity answer = new AnswerEntity(groupId, userId, value);
+      sendMessage(answer);
     }
+  }
 
-    public void setInterested(boolean value) {
-        //TODO Funtioniert noch nicht -> Fix
-        int userId = getUserId();
-        int groupId = getGroupId();
+  void setViewElements(String lastName, String description, ArrayList<String> tags) {
+    this.name.setText(lastName);
+    this.description.setText(description);
+    this.mTagContainerLayout.setTags(tags);
+  }
 
-        if(userId != -1 && groupId != -1){
-            AnswerEntity answer = new AnswerEntity(groupId, userId, value);
-            sendMessage(answer);
-        }
-    }
+  protected void setGestureSwipe() {
+    DetectSwipeGestureListener gestureListener = new DetectSwipeGestureListener(this);
+    gestureDetectorCompat =
+        new GestureDetectorCompat(
+            Objects.requireNonNull(getActivity()).getParent(), gestureListener);
+  }
 
-    void setViewElements(String lastName, String description, ArrayList<String> tags) {
-        this.name.setText(lastName);
-        this.description.setText(description);
-        this.mTagContainerLayout.setTags(tags);
-    }
+  public void showSuggestion() {}
 
-    protected void setGestureSwipe() {
-        DetectSwipeGestureListener gestureListener = new DetectSwipeGestureListener(this);
-        gestureDetectorCompat = new GestureDetectorCompat(
-                Objects.requireNonNull(getActivity()).getParent(), gestureListener);
-    }
+  public int getUserId() {
+    return 0;
+  }
 
-    public void showSuggestion(){
-    }
+  public int getGroupId() {
+    return 0;
+  }
 
-    public int getUserId(){
-        return 0;
-    }
+  public void sendMessage(AnswerEntity answer) {}
 
-    public int getGroupId(){
-        return 0;
-    }
-
-    public void sendMessage(AnswerEntity answer){}
-
-    protected void setProgress() {
-        mProgress.setProgress(60);
-        mProgress.setMax(100);
-        mProgress.setProgressDrawable(drawable);
-    }
+  protected void setProgress() {
+    mProgress.setProgress(60);
+    mProgress.setMax(100);
+    mProgress.setProgressDrawable(drawable);
+  }
 }
