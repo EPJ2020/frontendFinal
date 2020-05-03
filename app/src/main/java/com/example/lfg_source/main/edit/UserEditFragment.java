@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.rest.RestClientEditProfilePatch;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class UserEditFragment extends EditFragment {

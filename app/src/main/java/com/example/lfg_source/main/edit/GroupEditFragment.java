@@ -12,8 +12,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.rest.RestClientEditGroupPatch;
-import com.example.lfg_source.rest.RestClientNewGroupPost;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class GroupEditFragment extends EditFragment {

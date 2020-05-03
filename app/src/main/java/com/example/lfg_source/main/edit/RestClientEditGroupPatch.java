@@ -1,8 +1,8 @@
-package com.example.lfg_source.rest;
+package com.example.lfg_source.main.edit;
 
 import android.os.AsyncTask;
 
-import com.example.lfg_source.entity.User;
+import com.example.lfg_source.entity.Group;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,11 +14,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
-public class RestClientEditProfilePatch extends AsyncTask<String, Void, Void> {
-  private User message;
+public class RestClientEditGroupPatch extends AsyncTask<String, Void, Void> {
+  private Group message;
   private String url;
 
-  public RestClientEditProfilePatch(User message) {
+  public RestClientEditGroupPatch(Group message) {
     this.message = message;
   }
 
@@ -32,16 +32,16 @@ public class RestClientEditProfilePatch extends AsyncTask<String, Void, Void> {
       HttpEntity<String> entity = new HttpEntity<String>(headers);
       restTemplate.getRequestFactory().createRequest(new URI(url), HttpMethod.PATCH);
 
-      final HttpEntity<User> requestEntity = new HttpEntity<>(message);
-      ResponseEntity<User> response =
-          restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, User.class);
+      final HttpEntity<Group> requestEntity = new HttpEntity<>(message);
+      ResponseEntity<Group> response =
+          restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, Group.class);
     } catch (Exception e) {
       String answer = e.getMessage();
     }
     return null;
   }
 
-  protected void onPostExecute(ResponseEntity<User> result) {
+  protected void onPostExecute(ResponseEntity<Group> result) {
     HttpStatus statusCode = result.getStatusCode();
     if (statusCode != HttpStatus.OK) {
       this.execute(url);

@@ -3,7 +3,6 @@ package com.example.lfg_source.main.swipe;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.rest.RestClientUserSwipe;
 
 import java.util.List;
 

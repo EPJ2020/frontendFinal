@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.rest.RestClientMatchGroup;
-import com.example.lfg_source.rest.RestClientMatchUser;
 
 import java.util.List;
 
