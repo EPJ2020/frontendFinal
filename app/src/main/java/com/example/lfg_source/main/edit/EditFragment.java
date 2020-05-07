@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Switch;
 
 import androidx.fragment.app.Fragment;
@@ -29,6 +30,7 @@ public class EditFragment extends Fragment {
   private TextInputLayout textTag;
   private Button btnAddTag;
   private Switch active;
+  private ImageButton info;
 
   ArrayList<String> tags = new ArrayList<String>();
 
@@ -58,9 +60,9 @@ public class EditFragment extends Fragment {
     AlertDialog dialog =
         new AlertDialog.Builder(getActivity())
             .setTitle(text)
-            .setMessage("You will delete this tag!")
+            .setMessage("Das Tag wird gelöscht!")
             .setPositiveButton(
-                "Delete",
+                "Löschen",
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
@@ -70,7 +72,7 @@ public class EditFragment extends Fragment {
                   }
                 })
             .setNegativeButton(
-                "Cancel",
+                "Abbrechen",
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
@@ -82,25 +84,28 @@ public class EditFragment extends Fragment {
   }
 
   protected void setButtons(final User loggedInUserOrGroupAdmin) {
-    save.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            if (!allValidate() | !validateTags() | !validateContact()) {
-              return;
-            }
-            update();
-            goToHome(loggedInUserOrGroupAdmin);
-          }
-        });
-    btnAddTag.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            mTagContainerLayout.addTag(textTag.getEditText().getText().toString());
-            textTag.getEditText().setText("");
-          }
-        });
+    save.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (!allValidate() | !validateTags() | !validateContact()) {
+          return;
+        }
+        update();
+        goToHome(loggedInUserOrGroupAdmin);
+      }
+    });
+    btnAddTag.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if(textTag.getEditText().getText().toString().isEmpty()){
+          textTag.setError("Geben Sie ein Tag ein und klicken Sie anschliessend auf +");
+        }else{
+          mTagContainerLayout.addTag(textTag.getEditText().getText().toString());
+          textTag.getEditText().setText("");
+          textTag.setError("");
+        }
+      }
+    });
     cancel.setOnClickListener(
         new View.OnClickListener() {
           @Override
@@ -108,6 +113,19 @@ public class EditFragment extends Fragment {
             goToHome(loggedInUserOrGroupAdmin);
           }
         });
+    info.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v) {
+        AlertDialog dialog =
+          new AlertDialog.Builder(getActivity())
+            .setTitle("Tag Info")
+                  .setMessage("Bitte erfassen Sie hier Tag's. Diese Tag's werden von unserem " +
+                          "Algorithmus verwendet um Ihre Vorschläge zu berechnen.\n" +
+                          "Damit möglichst passende Vorschläge generiert werden können, bitten " +
+                          "wir Sie um 3-20 aussagekräftige und passende Tag's")
+                        .create();
+        dialog.show();
+      }
+    });
   }
 
   protected void goToHome(User loggedInUserOrGroupAdmin) {
@@ -158,6 +176,7 @@ public class EditFragment extends Fragment {
     btnAddTag = (Button) view.findViewById(R.id.button_tag);
     textTag = view.findViewById(R.id.text_tag);
     active = view.findViewById(R.id.active);
+    info = view.findViewById(R.id.button_info);
   }
 
   protected void setValues(
@@ -173,6 +192,7 @@ public class EditFragment extends Fragment {
       for (String tag : mytags) {
         tags.add(tag);
       }
+      active.setChecked(actived);
     }
     if (email != null) {
       inputEmail.getEditText().setText(email);
@@ -180,7 +200,6 @@ public class EditFragment extends Fragment {
     if (phoneNumber != null) {
       inputPhone.getEditText().setText(phoneNumber);
     }
-    active.setChecked(actived);
   }
 
   protected boolean getActiveState() {

@@ -29,6 +29,8 @@ public class Group {
   @JsonProperty("phoneNumber")
   private String phoneNumber;
 
+  private String location;
+
   public Group() {}
 
   public Group(int adminId) {
@@ -99,6 +101,10 @@ public class Group {
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
   }
+
+  public String getLocation() { return location; }
+
+  public void setLocation(String location) { this.location = location; }
 
   public void changeAttributes(
       String description,
