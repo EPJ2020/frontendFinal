@@ -29,6 +29,10 @@ public class User {
   @JsonProperty("active")
   private boolean active;
 
+  private String gender;
+
+  private String age;
+
   public User() {
     this.id = 0;
   }
@@ -96,6 +100,14 @@ public class User {
   public void setActive(boolean active) {
     this.active = active;
   }
+
+  public String getAge() { return age; }
+
+  public void setAge(String age) { this.age = age; }
+
+  public String getGender() { return gender; }
+
+  public void setGender(String gender) { this.gender = gender; }
 
   public void changeAttributes(
       String description,

@@ -21,6 +21,8 @@ public class UserEditFragment extends EditFragment {
 
   private TextInputLayout inputFirstName;
   private TextInputLayout inputLastName;
+  private TextInputLayout inputAge;
+  private TextInputLayout inputGender;
 
   public UserEditFragment() {
     super();
@@ -54,14 +56,15 @@ public class UserEditFragment extends EditFragment {
 
   @Override
   protected void update() {
-    actualuser.changeAttributes(
-        super.getInputDescriptionString(),
-        super.getActiveState(),
-        inputFirstName.getEditText().getText().toString().trim(),
-        super.getInputPhone(),
-        inputLastName.getEditText().getText().toString().trim(),
-        super.getInputEmail(),
-        super.getTags());
+    actualuser.setDescription(super.getInputDescriptionString());
+    actualuser.setActive(super.getActiveState());
+    actualuser.setLastName(inputLastName.getEditText().getText().toString().trim());
+    actualuser.setFirstName(inputFirstName.getEditText().getText().toString().trim());
+    actualuser.setPhone(super.getInputPhone());
+    actualuser.setEmail(super.getInputEmail());
+    actualuser.setTags(super.getTags());
+    actualuser.setGender(inputGender.getEditText().getText().toString().trim());
+    actualuser.setAge(inputAge.getEditText().getText().toString().trim());
     if (isNewUser) {
       sendMessageNewUser();
     } else {
@@ -85,6 +88,10 @@ public class UserEditFragment extends EditFragment {
       inputFirstName.setError("Geben sie Ihren Vornamen ein");
       return false;
     }
+    if (firstName.length() > 10) {
+      inputFirstName.setError("Sie können maximal 10 Zeichen eingeben");
+      return false;
+    }
     return true;
   }
 
@@ -94,15 +101,23 @@ public class UserEditFragment extends EditFragment {
       inputLastName.setError("Geben sie Ihren Nachnamen ein");
       return false;
     }
+    if (lastName.length() > 15) {
+      inputFirstName.setError("Sie können maximal 15 Zeichen eingeben");
+      return false;
+    }
     return true;
   }
 
   private void getUserViewElements(View view) {
     inputFirstName = view.findViewById(R.id.firstName);
     inputLastName = view.findViewById(R.id.lastName);
+    inputAge = view.findViewById(R.id.age);
+    inputGender = view.findViewById(R.id.gender);
 
     inputFirstName.getEditText().setText(actualuser.getFirstName());
     inputLastName.getEditText().setText(actualuser.getLastName());
+    inputAge.getEditText().setText(actualuser.getAge());
+    inputGender.getEditText().setText(actualuser.getGender());
   }
 
   @Override
