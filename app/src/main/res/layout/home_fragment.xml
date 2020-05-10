@@ -55,7 +55,8 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:text="@string/neue_gruppe"
-        android:textColor="@color/Text"/>
+        android:textColor="@color/Text"
+        android:clickable="true"/>
 
     <ImageButton
         android:id="@+id/newGroupButton"

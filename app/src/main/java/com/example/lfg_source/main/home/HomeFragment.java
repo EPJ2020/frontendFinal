@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.main.MainActivity;
 import com.example.lfg_source.main.edit.GroupEditFragment;
 import com.example.lfg_source.main.edit.UserEditFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
@@ -53,13 +52,16 @@ public class HomeFragment extends Fragment {
 
     yourProfileView = view.findViewById(R.id.yourProfile);
     final TextView yourProfileText = yourProfileView.findViewById(R.id.homeListEntryName);
-    yourProfileText.setText("Your Profile");
+    yourProfileText.setText(loggedInUser.getFirstName());
     yourProfileView.setOnTouchListener(
         new View.OnTouchListener() {
           @Override
           public boolean onTouch(View v, MotionEvent event) {
-            yourProfileView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            setSelected(null);
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+              yourProfileView.setBackgroundColor(Color.WHITE);
+            } else {
+              yourProfileView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            }
             return false;
           }
         });
@@ -75,8 +77,6 @@ public class HomeFragment extends Fragment {
             transaction.commit();
           }
         });
-
-    yourProfileView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
 
     ImageButton editProfileButton = yourProfileView.findViewById(R.id.editButton);
     editProfileButton.setOnClickListener(
@@ -104,8 +104,7 @@ public class HomeFragment extends Fragment {
 
     recyclerView.setAdapter(homeListAdapter);
 
-    ImageButton newGroupButton = view.findViewById(R.id.newGroupButton);
-    newGroupButton.setOnClickListener(
+    View.OnClickListener newGroupOnClick =
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -115,17 +114,27 @@ public class HomeFragment extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
           }
+        };
+
+    final ImageButton newGroupButton = view.findViewById(R.id.newGroupButton);
+    newGroupButton.setOnClickListener(newGroupOnClick);
+    final TextView newGroupText = view.findViewById(R.id.newGroupText);
+    newGroupText.setOnClickListener(newGroupOnClick);
+
+    newGroupText.setOnTouchListener(
+        new View.OnTouchListener() {
+          @Override
+          public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+              newGroupText.setBackgroundColor(Color.WHITE);
+            } else {
+              newGroupText.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            }
+            return false;
+          }
         });
 
     return view;
-  }
-
-  public void setSelected(Group group) {
-    if (group != null) {
-      yourProfileView.setBackgroundColor(Color.WHITE);
-    }
-    homeListAdapter.deselectGroups();
-    ((MainActivity) getActivity()).selectedGroup = group;
   }
 
   @Override

@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="@color/colorPrimary"
-            app:itemTextColor="@color/colorAccent"
+            app:itemTextColor="@color/colorBackground"
+            app:itemIconTint="@color/colorAccent"
             app:menu="@menu/bottom_navigation"
             tools:ignore="PrivateResource" />
 
