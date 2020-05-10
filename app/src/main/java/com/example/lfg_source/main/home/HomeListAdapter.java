@@ -24,6 +24,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
   private RecyclerView recyclerView;
   private HomeFragment context;
   private User loggedInUser;
+  private boolean isSelected = false;
 
   public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -78,10 +79,14 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
         new View.OnTouchListener() {
           @Override
           public boolean onTouch(View v, MotionEvent event) {
-            context.setSelected(group);
-            recyclerView
-                .getChildAt(position)
-                .setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+            if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+              recyclerView.getChildAt(position).setBackgroundColor(Color.WHITE);
+            } else {
+              recyclerView
+                  .getChildAt(position)
+                  .setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+            }
+            System.out.println(event.getAction());
             return false;
           }
         });
@@ -97,12 +102,6 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
             transaction.commit();
           }
         });
-  }
-
-  public void deselectGroups() {
-    for (int i = 0; groupList.size() > i; i++) {
-      recyclerView.getChildAt(i).setBackgroundColor(Color.WHITE);
-    }
   }
 
   @Override

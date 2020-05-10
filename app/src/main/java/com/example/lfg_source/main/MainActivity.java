@@ -10,12 +10,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lfg_source.R;
-import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
 import com.example.lfg_source.main.home.HomeFragment;
 import com.example.lfg_source.main.match.MatchFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
-import com.example.lfg_source.main.swipe.UserSwipeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
   public HomeFragment homeFragment = null;
   public Fragment selectedFragment;
-  public Group selectedGroup = null;
   private User loggedInUser = null;
 
   @Override
@@ -62,13 +59,7 @@ public class MainActivity extends AppCompatActivity {
           public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
               case R.id.action_swipe:
-                if (selectedGroup == null) {
-                  getSupportActionBar().setTitle("Swipe User");
-                  selectedFragment = new GroupSwipeFragment(loggedInUser.getId());
-                } else {
-                  getSupportActionBar().setTitle("Swipe Gruppe: " + selectedGroup.getName());
-                  selectedFragment = new UserSwipeFragment(selectedGroup);
-                }
+                selectedFragment = new GroupSwipeFragment(loggedInUser.getId());
                 break;
               case R.id.action_Matches:
                 getSupportActionBar().setTitle("Match");

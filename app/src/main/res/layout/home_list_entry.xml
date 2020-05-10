@@ -11,18 +11,25 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/Text"/>
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignStart="@+id/editButton"/>
+
     <ImageButton
         android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_margin="15dp"
         android:src="@drawable/ic_edit_black_24dp"
         android:tint="@color/colorPrimary"
         android:background="?android:attr/selectableItemBackground"/>
