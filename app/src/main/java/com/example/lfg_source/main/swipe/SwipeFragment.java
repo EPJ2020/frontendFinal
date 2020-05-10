@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
@@ -47,7 +48,13 @@ public class SwipeFragment extends Fragment {
   }
 
   public void setInterested(boolean value) {
-    // TODO Funtioniert noch nicht -> Fix
+    String text = "Abgelehnt";
+    if (value) {
+      text = "Angenommen";
+    }
+    Toast toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+    toast.show();
+
     int userId = getUserId();
     int groupId = getGroupId();
 
@@ -57,8 +64,8 @@ public class SwipeFragment extends Fragment {
     }
   }
 
-  void setViewElements(String lastName, String description, ArrayList<String> tags) {
-    this.name.setText(lastName);
+  void setViewElements(String name, String description, ArrayList<String> tags) {
+    this.name.setText(name);
     this.description.setText(description);
     this.mTagContainerLayout.setTags(tags);
   }

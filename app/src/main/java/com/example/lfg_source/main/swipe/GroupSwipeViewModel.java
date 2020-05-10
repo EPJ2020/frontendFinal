@@ -6,7 +6,7 @@ import com.example.lfg_source.entity.Group;
 
 import java.util.List;
 
-public class GroupSwipeViewModel<Groups> extends SwipeViewModel {
+public class GroupSwipeViewModel<Groups> extends androidx.lifecycle.ViewModel {
 
   private MutableLiveData<List<Group>> data;
 

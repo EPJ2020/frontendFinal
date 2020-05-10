@@ -34,4 +34,5 @@
     <string name="info_button">info-Button</string>
     <string name="alter">Alter</string>
     <string name="geschlecht">Geschlecht</string>
+    <string name="ort">Ort</string>
 </resources>
