@@ -84,28 +84,30 @@ public class EditFragment extends Fragment {
   }
 
   protected void setButtons(final User loggedInUserOrGroupAdmin) {
-    save.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (!allValidate() | !validateTags() | !validateContact()) {
-          return;
-        }
-        update();
-        goToHome(loggedInUserOrGroupAdmin);
-      }
-    });
-    btnAddTag.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if(textTag.getEditText().getText().toString().isEmpty()){
-          textTag.setError("Geben Sie ein Tag ein und klicken Sie anschliessend auf +");
-        }else{
-          mTagContainerLayout.addTag(textTag.getEditText().getText().toString());
-          textTag.getEditText().setText("");
-          textTag.setError("");
-        }
-      }
-    });
+    save.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            if (!allValidate() | !validateTags() | !validateContact()) {
+              return;
+            }
+            update();
+            goToHome(loggedInUserOrGroupAdmin);
+          }
+        });
+    btnAddTag.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            if (textTag.getEditText().getText().toString().isEmpty()) {
+              textTag.setError("Geben Sie ein Tag ein und klicken Sie anschliessend auf +");
+            } else {
+              mTagContainerLayout.addTag(textTag.getEditText().getText().toString());
+              textTag.getEditText().setText("");
+              textTag.setError("");
+            }
+          }
+        });
     cancel.setOnClickListener(
         new View.OnClickListener() {
           @Override
@@ -113,19 +115,21 @@ public class EditFragment extends Fragment {
             goToHome(loggedInUserOrGroupAdmin);
           }
         });
-    info.setOnClickListener(new View.OnClickListener() {
-      public void onClick(View v) {
-        AlertDialog dialog =
-          new AlertDialog.Builder(getActivity())
-            .setTitle("Tag Info")
-                  .setMessage("Bitte erfassen Sie hier Tag's. Diese Tag's werden von unserem " +
-                          "Algorithmus verwendet um Ihre Vorschläge zu berechnen.\n" +
-                          "Damit möglichst passende Vorschläge generiert werden können, bitten " +
-                          "wir Sie um 3-20 aussagekräftige und passende Tag's")
-                        .create();
-        dialog.show();
-      }
-    });
+    info.setOnClickListener(
+        new View.OnClickListener() {
+          public void onClick(View v) {
+            AlertDialog dialog =
+                new AlertDialog.Builder(getActivity())
+                    .setTitle("Tag Info")
+                    .setMessage(
+                        "Bitte erfassen Sie hier Tag's. Diese Tag's werden von unserem "
+                            + "Algorithmus verwendet um Ihre Vorschläge zu berechnen.\n"
+                            + "Damit möglichst passende Vorschläge generiert werden können, bitten "
+                            + "wir Sie um 3-20 aussagekräftige und passende Tag's")
+                    .create();
+            dialog.show();
+          }
+        });
   }
 
   protected void goToHome(User loggedInUserOrGroupAdmin) {

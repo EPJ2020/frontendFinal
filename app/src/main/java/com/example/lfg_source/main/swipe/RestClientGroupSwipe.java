@@ -3,7 +3,6 @@ package com.example.lfg_source.main.swipe;
 import android.os.AsyncTask;
 
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.main.swipe.GroupSwipeViewModel;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

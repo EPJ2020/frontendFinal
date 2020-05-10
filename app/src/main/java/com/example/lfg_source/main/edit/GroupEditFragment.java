@@ -7,13 +7,11 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +31,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import static android.widget.Toast.LENGTH_LONG;
-
 public class GroupEditFragment extends EditFragment {
 
   private static final int LOCATION_PERMISSION = 42;
@@ -45,8 +41,10 @@ public class GroupEditFragment extends EditFragment {
   private Button delete;
   private LocationManager locationManager;
   private Button addLogationButton;
+
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   public TextView showLocation;
+
   private Location originLocation;
 
   private TextInputLayout inputGroupName;
@@ -89,25 +87,31 @@ public class GroupEditFragment extends EditFragment {
   private void addLocation() {
     locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-    addLogationButton.setOnClickListener(new View.OnClickListener() {
-      public void onClick(View v) {
-        if (!(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+    addLogationButton.setOnClickListener(
+        new View.OnClickListener() {
+          public void onClick(View v) {
+            if (!(ContextCompat.checkSelfPermission(
+                    getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED)) {
-          ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION);
-        }else {
-          if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(getActivity(), "GPS ist deaktiviert", Toast.LENGTH_SHORT).show();
-          } else {
-            originLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (originLocation == null) {
-              Toast.makeText(getActivity(), "GPS Verbindung Fehlgeschlagen", Toast.LENGTH_SHORT).show();
+              ActivityCompat.requestPermissions(
+                  getActivity(),
+                  new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                  LOCATION_PERMISSION);
             } else {
-              onLocationChanged(originLocation);
+              if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Toast.makeText(getActivity(), "GPS ist deaktiviert", Toast.LENGTH_SHORT).show();
+              } else {
+                originLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (originLocation == null) {
+                  Toast.makeText(getActivity(), "GPS Verbindung Fehlgeschlagen", Toast.LENGTH_SHORT)
+                      .show();
+                } else {
+                  onLocationChanged(originLocation);
+                }
+              }
             }
           }
-        }
-      }
-    });
+        });
   }
 
   public void onLocationChanged(Location location) {
@@ -117,9 +121,9 @@ public class GroupEditFragment extends EditFragment {
     List<Address> adresses;
     try {
       adresses = geocoder.getFromLocation(latitude, longitude, 10);
-      if(adresses.size() > 0){
-        for (Address adr : adresses){
-          if(adr.getLocality() != null && adr.getLocality().length() > 0) {
+      if (adresses.size() > 0) {
+        for (Address adr : adresses) {
+          if (adr.getLocality() != null && adr.getLocality().length() > 0) {
             showLocation.setText(adr.getLocality());
             actualGroup.setLocation(adr.getLocality());
             break;
@@ -133,15 +137,16 @@ public class GroupEditFragment extends EditFragment {
   }
 
   private void setDeleteButton() {
-    delete.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        final String url = "http://152.96.56.38:8080/Group/"+actualGroup.getGroupId();
-        RestClientDeleteGroup task = new RestClientDeleteGroup();
-        task.execute(url);
-        goToHome(groupAdminUser);
-      }
-    });
+    delete.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            final String url = "http://152.96.56.38:8080/Group/" + actualGroup.getGroupId();
+            RestClientDeleteGroup task = new RestClientDeleteGroup();
+            task.execute(url);
+            goToHome(groupAdminUser);
+          }
+        });
   }
 
   @Override

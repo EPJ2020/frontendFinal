@@ -29,6 +29,7 @@ public class Group {
   @JsonProperty("phoneNumber")
   private String phoneNumber;
 
+  @JsonProperty("location")
   private String location;
 
   public Group() {}
@@ -102,9 +103,13 @@ public class Group {
     this.phoneNumber = phoneNumber;
   }
 
-  public String getLocation() { return location; }
+  public String getLocation() {
+    return location;
+  }
 
-  public void setLocation(String location) { this.location = location; }
+  public void setLocation(String location) {
+    this.location = location;
+  }
 
   public void changeAttributes(
       String description,

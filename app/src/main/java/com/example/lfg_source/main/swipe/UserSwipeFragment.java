@@ -22,6 +22,8 @@ import java.util.List;
 public class UserSwipeFragment extends SwipeFragment {
   private Group groupThatSearches;
   private TextView firstName;
+  private TextView gender;
+  private TextView age;
   private UserSwipeViewModel mViewModel;
   private List<User> usersToSwipe = new ArrayList<>();
   private boolean isInit = true;
@@ -39,6 +41,8 @@ public class UserSwipeFragment extends SwipeFragment {
     View view = inflater.inflate(R.layout.user_swipe_fragment, container, false);
     super.getViewElements(view);
     firstName = view.findViewById(R.id.firstname);
+    gender = view.findViewById(R.id.gender);
+    age = view.findViewById(R.id.age);
     return view;
   }
 
@@ -75,10 +79,22 @@ public class UserSwipeFragment extends SwipeFragment {
       super.setProgress();
       this.firstName.setText(usersToSwipe.get(0).getFirstName());
       usersToSwipe.remove(0);
+      age.setVisibility(View.GONE);
+      gender.setVisibility(View.GONE);
+      if (usersToSwipe.get(0).getGender() != null) {
+        gender.setText("Geschlecht: " + usersToSwipe.get(0).getGender());
+        gender.setVisibility(View.VISIBLE);
+      }
+      if (usersToSwipe.get(0).getAge() != null) {
+        gender.setText("Alter: " + usersToSwipe.get(0).getGender());
+        gender.setVisibility(View.VISIBLE);
+      }
     } else {
       super.setViewElements(
-          "Zurzeit wurden leider keine Passenden Personen gefunden", "", new ArrayList<String>());
+          "", "Zurzeit wurden leider keine Passenden Personen gefunden", new ArrayList<String>());
       this.firstName.setText("");
+      gender.setVisibility(View.GONE);
+      age.setVisibility(View.GONE);
     }
   }
 

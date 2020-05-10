@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,10 +21,9 @@ import java.util.List;
 public class GroupSwipeFragment extends SwipeFragment {
   private GroupSwipeViewModel mViewModel;
   private int userId;
-
   private boolean isInit = true;
-
   private List<Group> groupsToSwipe = new ArrayList<>();
+  private TextView location;
 
   public GroupSwipeFragment(int loggedInUserId) {
     userId = loggedInUserId;
@@ -37,7 +37,7 @@ public class GroupSwipeFragment extends SwipeFragment {
     super.setGestureSwipe();
     View view = inflater.inflate(R.layout.group_swipe_fragment, container, false);
     super.getViewElements(view);
-
+    location = view.findViewById(R.id.location);
     return view;
   }
 
@@ -71,11 +71,17 @@ public class GroupSwipeFragment extends SwipeFragment {
           groupsToSwipe.get(0).getName(),
           groupsToSwipe.get(0).getDescription(),
           groupsToSwipe.get(0).getTags());
+      location.setVisibility(View.GONE);
+      if (groupsToSwipe.get(0).getLocation() != null) {
+        location.setText("Treffpunkt der Gruppe: " + groupsToSwipe.get(0).getLocation());
+        location.setVisibility(View.VISIBLE);
+      }
       super.setProgress();
       groupsToSwipe.remove(0);
     } else {
       super.setViewElements(
-          "Zurzeit wurden leider keine Passenden Gruppen gefunden", "", new ArrayList<String>());
+          "", "Zurzeit wurden leider keine Passenden Gruppen gefunden", new ArrayList<String>());
+      location.setVisibility(View.GONE);
     }
   }
 

@@ -48,26 +48,44 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:text="@string/nachname"
         android:textSize="30sp" />
 
     <TextView
         android:id="@+id/firstname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/vorname"
         android:textSize="30sp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/name"/>
 
     <TextView
+        android:id="@+id/age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:layout_below="@+id/circularProgressbar"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_margin="8dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/age"
+        android:visibility="gone"/>
+
+    <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/beschreibung"
-        android:textSize="30sp"
+        android:textSize="15sp"
+        android:layout_margin="8dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/circularProgressbar"/>
+        android:layout_below="@+id/gender"/>
 
     <co.lujun.androidtagview.TagContainerLayout
         android:id="@+id/tagcontainerLayout"
