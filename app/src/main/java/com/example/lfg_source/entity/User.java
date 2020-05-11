@@ -2,9 +2,10 @@ package com.example.lfg_source.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
   @JsonProperty("userId")
   private Integer id;
 

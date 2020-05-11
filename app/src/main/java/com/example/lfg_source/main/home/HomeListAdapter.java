@@ -25,6 +25,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
   private HomeFragment context;
   private User loggedInUser;
   private boolean isSelected = false;
+  private String token;
 
   public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -41,11 +42,12 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
   }
 
   public HomeListAdapter(
-      List<Group> groupList, RecyclerView recyclerView, HomeFragment context, User loggedInUser) {
+      List<Group> groupList, RecyclerView recyclerView, HomeFragment context, User loggedInUser, String token) {
     this.groupList = groupList;
     this.recyclerView = recyclerView;
     this.context = context;
     this.loggedInUser = loggedInUser;
+    this.token = token;
   }
 
   public void changeGroupList(List<Group> groupList) {
@@ -67,7 +69,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            GroupEditFragment nextFrag = new GroupEditFragment(group, loggedInUser);
+            GroupEditFragment nextFrag = new GroupEditFragment(group, loggedInUser, token);
             FragmentTransaction transaction = context.getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
