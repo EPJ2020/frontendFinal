@@ -2,6 +2,7 @@ package com.example.lfg_source.main.edit;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -41,6 +42,7 @@ public class GroupEditFragment extends EditFragment {
   private Button delete;
   private LocationManager locationManager;
   private Button addLogationButton;
+  private String token;
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   public TextView showLocation;
@@ -49,17 +51,19 @@ public class GroupEditFragment extends EditFragment {
 
   private TextInputLayout inputGroupName;
 
-  public GroupEditFragment(User groupAdminUser) {
+  public GroupEditFragment(User groupAdminUser, String token) {
     super();
     this.groupAdminUser = groupAdminUser;
     this.actualGroup = new Group(groupAdminUser.getId());
     isNewGroup = true;
+    this.token = token;
   }
 
-  public GroupEditFragment(Group group, User groupAdminUser) {
+  public GroupEditFragment(Group group, User groupAdminUser, String token) {
     super();
     this.groupAdminUser = groupAdminUser;
     actualGroup = group;
+    this.token = token;
   }
 
   @Override
@@ -68,6 +72,7 @@ public class GroupEditFragment extends EditFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.group_edit_fragment, container, false);
+    super.setToken(token);
     super.getViewElements(view);
     getGroupViewElements(view);
     super.setValues(

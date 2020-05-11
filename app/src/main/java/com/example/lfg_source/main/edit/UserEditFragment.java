@@ -1,5 +1,7 @@
 package com.example.lfg_source.main.edit;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +20,24 @@ public class UserEditFragment extends EditFragment {
   private UserEditViewModel mViewModel;
   private User actualuser;
   private Boolean isNewUser = false;
+  private String token;
 
   private TextInputLayout inputFirstName;
   private TextInputLayout inputLastName;
   private TextInputLayout inputAge;
   private TextInputLayout inputGender;
 
-  public UserEditFragment() {
+  public UserEditFragment(String token) {
     super();
     this.actualuser = new User();
     isNewUser = true;
+    this.token = token;
   }
 
-  public UserEditFragment(User loggedInUser) {
+  public UserEditFragment(User loggedInUser, String token) {
     super();
     actualuser = loggedInUser;
+    this.token = token;
   }
 
   @Override
@@ -41,6 +46,7 @@ public class UserEditFragment extends EditFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.user_edit_fragment, container, false);
+    super.setToken(token);
     super.getViewElements(view);
     getUserViewElements(view);
     super.setValues(
@@ -74,6 +80,8 @@ public class UserEditFragment extends EditFragment {
 
   private void sendMessageNewUser() {
     final String url = "http://152.96.56.38:8080/User";
+    RestClientNewUser task = new RestClientNewUser(actualuser, token);
+    task.execute(url);
   }
 
   private void sendMessageEditUser() {

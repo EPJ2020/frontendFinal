@@ -1,5 +1,9 @@
 package com.example.lfg_source.main;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -8,20 +12,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.User;
+import com.example.lfg_source.login.Login;
+import com.example.lfg_source.main.edit.UserEditFragment;
 import com.example.lfg_source.main.home.HomeFragment;
 import com.example.lfg_source.main.match.MatchFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
-  public HomeFragment homeFragment = null;
-  public Fragment selectedFragment;
-  private User loggedInUser = null;
+  private static final int requestCode = 1;
+  private HomeFragment homeFragment = null;
+  private Fragment selectedFragment;
+  private String token;
+  private User loggedInUser;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -29,28 +36,57 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
     getSupportActionBar().setTitle("LFG Home");
 
-    loggedInUser = new User();
-    loggedInUser.setActive(true);
-    loggedInUser.setId(1);
-    loggedInUser.setLastName("Deller");
-    loggedInUser.setFirstName("Kaniel");
-    loggedInUser.setEmail("ggg@ggg.ch");
-    ArrayList<String> tags = new ArrayList<>();
-    tags.add("matchesAll");
-    tags.add("laufen");
-    tags.add("gaertnern");
-    tags.add("c++");
-    tags.add("blah");
-    loggedInUser.setTags(tags);
-    loggedInUser.setPhone("0773736366");
+    SharedPreferences preferences = this.getSharedPreferences("LFG", Context.MODE_PRIVATE);
+    preferences.edit().putString("USERTOKEN", null).apply();
+    token = preferences.getString("USERTOKEN", null);
 
-    homeFragment = new HomeFragment(loggedInUser);
+    if(token == null){
+      Intent i = new Intent(getApplicationContext(), Login.class);
+      startActivityForResult(i, requestCode);
+    }
+    else{
+      setup();
+    }
+  }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == this.requestCode) {
+      if (resultCode == Activity.RESULT_OK) {
+        token = data.getStringExtra("usertoken");
+        SharedPreferences preferences = this.getSharedPreferences("LFG", Context.MODE_PRIVATE);
+        preferences.edit().putString("USERTOKEN", token).apply();
+        setup();
+      }
+    }
+  }
+
+  private void setup() {
+    MainViewModel mainViewModel = new MainViewModel();
+    mainViewModel.getLoginUser().observe(this, new Observer<User>() {
+      @Override
+      public void onChanged(User user) {
+        loggedInUser = user;
+        finishSetup();
+      }
+    });
+    mainViewModel.sendMessageUser(token);
+  }
+
+  private void finishSetup(){
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-    fragmentTransaction.add(R.id.fragment_container, homeFragment);
-    fragmentTransaction.commit();
+    if (loggedInUser == null) {
+      UserEditFragment userEditFragment = new UserEditFragment(token);
+      fragmentTransaction.add(R.id.fragment_container, userEditFragment);
+      fragmentTransaction.commit();
+    } else {
+      homeFragment = new HomeFragment(token, loggedInUser);
+      fragmentTransaction.add(R.id.fragment_container, homeFragment);
+      fragmentTransaction.commit();
+    }
 
     BottomNavigationView bottomNavigationView = findViewById(R.id.mainNavigation);
     bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -59,15 +95,17 @@ public class MainActivity extends AppCompatActivity {
           public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
               case R.id.action_swipe:
+                // TODO
                 selectedFragment = new GroupSwipeFragment(loggedInUser.getId());
                 break;
               case R.id.action_Matches:
                 getSupportActionBar().setTitle("Match");
+                // TODO
                 selectedFragment = new MatchFragment(loggedInUser);
                 break;
               default:
                 getSupportActionBar().setTitle("LFG Home");
-                selectedFragment = homeFragment;
+                selectedFragment = new HomeFragment(token, loggedInUser);;
                 break;
             }
             getSupportFragmentManager()

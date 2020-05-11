@@ -33,13 +33,15 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-  private final User loggedInUser;
+  private User loggedInUser;
   private HomeViewModel mViewModel;
   private List<Group> groupList = new ArrayList<>();
   private HomeListAdapter homeListAdapter;
   private View yourProfileView = null;
+  private String token;
 
-  public HomeFragment(User loggedInUser) {
+  public HomeFragment(String token, User loggedInUser) {
+    this.token = token;
     this.loggedInUser = loggedInUser;
   }
 
@@ -83,7 +85,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            UserEditFragment nextFrag = new UserEditFragment(loggedInUser);
+            UserEditFragment nextFrag = new UserEditFragment(loggedInUser, token);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -93,7 +95,7 @@ public class HomeFragment extends Fragment {
 
     final RecyclerView recyclerView = view.findViewById(R.id.groupSelect);
 
-    homeListAdapter = new HomeListAdapter(groupList, recyclerView, this, loggedInUser);
+    homeListAdapter = new HomeListAdapter(groupList, recyclerView, this, loggedInUser, token);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -108,7 +110,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            GroupEditFragment nextFrag = new GroupEditFragment(loggedInUser);
+            GroupEditFragment nextFrag = new GroupEditFragment(loggedInUser, token);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -140,7 +142,8 @@ public class HomeFragment extends Fragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+    mViewModel = new HomeViewModel();
+    mViewModel.setToken(token);
     final Observer<List<Group>> userObserver =
         new Observer<List<Group>>() {
           @Override
@@ -152,6 +155,6 @@ public class HomeFragment extends Fragment {
           }
         };
     mViewModel.getData().observe(getViewLifecycleOwner(), userObserver);
-    mViewModel.sendMessage(loggedInUser.getId());
+    mViewModel.sendMessageGroup();
   }
 }

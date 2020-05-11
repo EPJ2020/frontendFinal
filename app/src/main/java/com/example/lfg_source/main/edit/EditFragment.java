@@ -31,6 +31,7 @@ public class EditFragment extends Fragment {
   private Button btnAddTag;
   private Switch active;
   private ImageButton info;
+  private String token;
 
   ArrayList<String> tags = new ArrayList<String>();
 
@@ -83,6 +84,10 @@ public class EditFragment extends Fragment {
     dialog.show();
   }
 
+  protected void setToken(String token){
+    this.token = token;
+  }
+
   protected void setButtons(final User loggedInUserOrGroupAdmin) {
     save.setOnClickListener(
         new View.OnClickListener() {
@@ -115,6 +120,9 @@ public class EditFragment extends Fragment {
             goToHome(loggedInUserOrGroupAdmin);
           }
         });
+    if(token == null){
+      cancel.setEnabled(false);
+    }
     info.setOnClickListener(
         new View.OnClickListener() {
           public void onClick(View v) {
@@ -132,8 +140,9 @@ public class EditFragment extends Fragment {
         });
   }
 
-  protected void goToHome(User loggedInUserOrGroupAdmin) {
-    Fragment newFragment = new HomeFragment(loggedInUserOrGroupAdmin);
+  protected void goToHome(User loggedInUser) {
+    //TODO uncomment and fix
+    Fragment newFragment = new HomeFragment(token, loggedInUser);
     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.fragment_container, newFragment);
     transaction.addToBackStack(null);

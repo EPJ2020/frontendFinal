@@ -8,23 +8,27 @@ import com.example.lfg_source.entity.Group;
 import java.util.List;
 
 public class HomeViewModel extends ViewModel {
-  private MutableLiveData<List<Group>> data;
+  private MutableLiveData<List<Group>> groupList;
+  private String token;
+
+  public void setToken(String token){
+    this.token = token;
+  }
 
   public void setData(List<Group> data) {
-    this.data.setValue(data);
+    this.groupList.setValue(data);
   }
 
   public MutableLiveData<List<Group>> getData() {
-    if (data == null) {
-      data = new MutableLiveData<>();
+    if (groupList == null) {
+      groupList = new MutableLiveData<>();
     }
-    return data;
+    return groupList;
   }
 
-  public void sendMessage(int userID) {
-    final String url = "http://152.96.56.38:8080/User/MyGroups/" + userID;
-    RestClientHome task = new RestClientHome();
-    task.setHomeViewModel(this);
+  public void sendMessageGroup() {
+    final String url = "http://152.96.56.38:8080/User/MyGroups";
+    RestClientHome task = new RestClientHome(this,token);
     task.execute(url);
   }
 }

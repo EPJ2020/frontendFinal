@@ -1,8 +1,9 @@
-package com.example.lfg_source.main.home;
+package com.example.lfg_source.main;
 
 import android.os.AsyncTask;
 
-import com.example.lfg_source.entity.Group;
+import com.example.lfg_source.entity.User;
+import com.example.lfg_source.login.LoginViewModel;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,20 +13,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-public class RestClientHome extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
-  private HomeViewModel homeViewModel;
+public class RestClientLoginUser extends AsyncTask<String, Void, ResponseEntity<User>> {
+  private MainViewModel mainViewModel;
   private String token;
 
-  public RestClientHome(HomeViewModel homeViewModel, String token) {
-    this.homeViewModel = homeViewModel;
+  public RestClientLoginUser(MainViewModel mainViewModel, String token) {
+    this.mainViewModel = mainViewModel;
     this.token = token;
   }
 
   @Override
-  protected ResponseEntity<Group[]> doInBackground(String... uri) {
+  protected ResponseEntity<User> doInBackground(String... uri) {
     final String url = uri[0];
     RestTemplate restTemplate = new RestTemplate();
     try {
@@ -33,7 +31,7 @@ public class RestClientHome extends AsyncTask<String, Void, ResponseEntity<Group
       HttpHeaders headers = new HttpHeaders();
       headers.add("authorization", "Bearer "+token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
-      ResponseEntity<Group[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Group[].class);
+      ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
       return response;
     } catch (Exception e) {
       String message = e.getMessage();
@@ -41,10 +39,10 @@ public class RestClientHome extends AsyncTask<String, Void, ResponseEntity<Group
     }
   }
 
-  protected void onPostExecute(ResponseEntity<Group[]> result) {
+  protected void onPostExecute(ResponseEntity<User> result) {
     if (result != null) {
       HttpStatus statusCode = result.getStatusCode();
-      homeViewModel.setData(new ArrayList<Group>(Arrays.asList(result.getBody())));
+      mainViewModel.setLoginUser(result.getBody());
     }
   }
 }
