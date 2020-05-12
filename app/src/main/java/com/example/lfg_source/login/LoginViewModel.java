@@ -9,17 +9,21 @@ import androidx.lifecycle.ViewModel;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.LoginEntity;
 import com.example.lfg_source.entity.LoginFormState;
-import com.example.lfg_source.entity.User;
-import com.example.lfg_source.main.RestClientLoginUser;
 
 public class LoginViewModel extends ViewModel {
 
   private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-  private MutableLiveData<String> loginResult = new MutableLiveData<>(); // Token add to Store
+  private MutableLiveData<String> loginResult = new MutableLiveData<>();
+  private MutableLiveData<String> loginFailMessage = new MutableLiveData<>();
 
   LiveData<LoginFormState> getLoginFormState() {
     return loginFormState;
   }
+
+  LiveData<String> getLoginFailMessage() {
+    return loginFailMessage;
+  }
+
   LiveData<String> getLoginResult() {
     return loginResult;
   }
@@ -46,7 +50,6 @@ public class LoginViewModel extends ViewModel {
     }
   }
 
-  // A placeholder username validation check
   private boolean isUserNameValid(String username) {
     if (username == null) {
       return false;
@@ -63,7 +66,11 @@ public class LoginViewModel extends ViewModel {
   }
 
   public void setLoginData(String data) {
-    this.loginResult.setValue(data);
+    loginResult.setValue(data);
+  }
+
+  public void setLoginFailMessage(String message) {
+    loginFailMessage.setValue(message);
   }
 
   public void sendMessage(LoginEntity loginEntity, String url) {

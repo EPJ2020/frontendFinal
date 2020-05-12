@@ -3,7 +3,6 @@ package com.example.lfg_source.main;
 import android.os.AsyncTask;
 
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.login.LoginViewModel;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,9 +28,10 @@ public class RestClientLoginUser extends AsyncTask<String, Void, ResponseEntity<
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
-      headers.add("authorization", "Bearer "+token);
+      headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
-      ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
+      ResponseEntity<User> response =
+          restTemplate.exchange(url, HttpMethod.GET, entity, User.class);
       return response;
     } catch (Exception e) {
       String message = e.getMessage();

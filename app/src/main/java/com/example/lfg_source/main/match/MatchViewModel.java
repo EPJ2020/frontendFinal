@@ -12,6 +12,11 @@ public class MatchViewModel extends ViewModel {
   private MutableLiveData<List<Group>> dataGroup;
   private MutableLiveData<List<User>> dataUser;
   private MutableLiveData<List<Group>> dataGroupAdmin;
+  private String token;
+
+  public void setToken(String token) {
+    this.token = token;
+  }
 
   public void setDataGroup(List<Group> dataGroup) {
     this.dataGroup.setValue(dataGroup);
@@ -47,22 +52,20 @@ public class MatchViewModel extends ViewModel {
   }
 
   public void sendMessage(int userID) {
-    final String url = "http://152.96.56.38:8080/User/Matches/" + userID;
-    RestClientMatchGroup task = new RestClientMatchGroup(this, false);
-
+    final String url = "http://152.96.56.38:8080/User/Matches/";
+    RestClientMatchGroup task = new RestClientMatchGroup(this, false, token);
     task.execute(url);
   }
 
   public void sendMessageAdmin(int userID) {
-    final String url = "http://152.96.56.38:8080/User/Matches/" + userID;
-    RestClientMatchGroup task = new RestClientMatchGroup(this, true);
-
+    final String url = "http://152.96.56.38:8080/User/MyGroups/";
+    RestClientMyGroup task = new RestClientMyGroup(this, token);
     task.execute(url);
   }
 
   public void sendMessage(Group group) {
-    final String url = "http://152.96.56.38:8080/Group/Matches/" + group.getOwnerId();
-    RestClientMatchUser task = new RestClientMatchUser(this);
+    final String url = "http://152.96.56.38:8080/Group/Matches/" + group.getGroupId();
+    RestClientMatchUser task = new RestClientMatchUser(this, token);
     task.execute(url);
   }
 }

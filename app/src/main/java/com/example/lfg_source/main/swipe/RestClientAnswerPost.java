@@ -14,9 +14,11 @@ import org.springframework.web.client.RestTemplate;
 public class RestClientAnswerPost extends AsyncTask<String, Void, Void> {
   private AnswerEntity message;
   private String url;
+  private String token;
 
-  public RestClientAnswerPost(AnswerEntity message) {
+  public RestClientAnswerPost(AnswerEntity message, String token) {
     this.message = message;
+    this.token = token;
   }
 
   @Override
@@ -26,9 +28,11 @@ public class RestClientAnswerPost extends AsyncTask<String, Void, Void> {
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
+      headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
+      HttpEntity<AnswerEntity> request = new HttpEntity<>(message, headers);
       ResponseEntity<AnswerEntity> response =
-          restTemplate.postForEntity(url, message, AnswerEntity.class);
+          restTemplate.postForEntity(url, request, AnswerEntity.class);
     } catch (Exception e) {
       String answer = e.getMessage();
     }

@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.User;
+import com.example.lfg_source.main.MainActivity;
 import com.example.lfg_source.main.home.HomeFragment;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -84,7 +85,7 @@ public class EditFragment extends Fragment {
     dialog.show();
   }
 
-  protected void setToken(String token){
+  protected void setToken(String token) {
     this.token = token;
   }
 
@@ -120,9 +121,6 @@ public class EditFragment extends Fragment {
             goToHome(loggedInUserOrGroupAdmin);
           }
         });
-    if(token == null){
-      cancel.setEnabled(false);
-    }
     info.setOnClickListener(
         new View.OnClickListener() {
           public void onClick(View v) {
@@ -141,7 +139,7 @@ public class EditFragment extends Fragment {
   }
 
   protected void goToHome(User loggedInUser) {
-    //TODO uncomment and fix
+    ((MainActivity) getActivity()).setUser(loggedInUser);
     Fragment newFragment = new HomeFragment(token, loggedInUser);
     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.fragment_container, newFragment);

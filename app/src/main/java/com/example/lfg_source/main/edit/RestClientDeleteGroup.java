@@ -9,6 +9,11 @@ import org.springframework.web.client.RestTemplate;
 
 public class RestClientDeleteGroup extends AsyncTask<String, Void, Void> {
   private String url;
+  private String token;
+
+  RestClientDeleteGroup(String token) {
+    this.token = token;
+  }
 
   @Override
   protected Void doInBackground(String... uri) {
@@ -17,9 +22,10 @@ public class RestClientDeleteGroup extends AsyncTask<String, Void, Void> {
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
+      headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-      restTemplate.delete(url);
+      restTemplate.delete(url, entity);
     } catch (Exception e) {
       String answer = e.getMessage();
     }

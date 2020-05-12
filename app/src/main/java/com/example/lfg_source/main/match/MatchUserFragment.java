@@ -24,16 +24,18 @@ import com.example.lfg_source.main.MainActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatchFragment extends Fragment {
+public class MatchUserFragment extends Fragment {
   private User loggedInUser;
   private MatchViewModel mViewModel;
-  private MatchListAdapter matchListAdapter;
-  private List<Group> groupList = new ArrayList<>();
+  private MatchUserListAdapter matchListAdapter;
   private List<Group> groupAdminList = new ArrayList<>();
+  private List<User> memberList = new ArrayList<>();
+  private Group actual;
   private String token;
 
-  public MatchFragment(User loggedInUser, String token) {
+  public MatchUserFragment(User loggedInUser, Group group, String token) {
     this.loggedInUser = loggedInUser;
+    this.actual = group;
     this.token = token;
   }
 
@@ -44,7 +46,7 @@ public class MatchFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.match_fragment, container, false);
     final RecyclerView recyclerView = view.findViewById(R.id.yourMatchesList);
-    matchListAdapter = new MatchListAdapter(groupList, recyclerView, this);
+    matchListAdapter = new MatchUserListAdapter(memberList, recyclerView, this);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -63,19 +65,7 @@ public class MatchFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(MatchViewModel.class);
     mViewModel.setToken(token);
-    final Observer<List<Group>> userObserver =
-        new Observer<List<Group>>() {
-          @Override
-          public void onChanged(List<Group> groups) {
-            groupList = new ArrayList<>();
-            groupList.addAll(groups);
-            matchListAdapter.changeGroupList(groupList);
-            matchListAdapter.notifyDataSetChanged();
-          }
-        };
-    mViewModel.getDataGroup().observe(getViewLifecycleOwner(), userObserver);
-    mViewModel.sendMessage(loggedInUser.getId());
-
+    // groupAdminList is the List of groups where the loggedInUser is admin
     final Observer<List<Group>> groupObserver =
         new Observer<List<Group>>() {
           @Override
@@ -91,5 +81,18 @@ public class MatchFragment extends Fragment {
         };
     mViewModel.getDataGroupAdmin().observe(getViewLifecycleOwner(), groupObserver);
     mViewModel.sendMessageAdmin(loggedInUser.getId());
+
+    // List of members of the actual group where the loggedInUser is admin.
+    final Observer<List<User>> memberObserver =
+        new Observer<List<User>>() {
+          @Override
+          public void onChanged(List<User> members) {
+            memberList = new ArrayList<>();
+            memberList.addAll(members);
+            matchListAdapter.notifyDataSetChanged();
+          }
+        };
+    mViewModel.getDataUser().observe(getViewLifecycleOwner(), memberObserver);
+    mViewModel.sendMessage(actual);
   }
 }

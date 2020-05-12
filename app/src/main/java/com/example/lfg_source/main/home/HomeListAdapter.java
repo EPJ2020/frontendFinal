@@ -42,7 +42,11 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
   }
 
   public HomeListAdapter(
-      List<Group> groupList, RecyclerView recyclerView, HomeFragment context, User loggedInUser, String token) {
+      List<Group> groupList,
+      RecyclerView recyclerView,
+      HomeFragment context,
+      User loggedInUser,
+      String token) {
     this.groupList = groupList;
     this.recyclerView = recyclerView;
     this.context = context;
@@ -97,7 +101,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            UserSwipeFragment nextFrag = new UserSwipeFragment(group);
+            UserSwipeFragment nextFrag = new UserSwipeFragment(group, token);
             FragmentTransaction transaction = context.getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);

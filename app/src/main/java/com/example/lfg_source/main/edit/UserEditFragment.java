@@ -1,7 +1,5 @@
 package com.example.lfg_source.main.edit;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.User;
@@ -17,7 +14,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class UserEditFragment extends EditFragment {
 
-  private UserEditViewModel mViewModel;
   private User actualuser;
   private Boolean isNewUser = false;
   private String token;
@@ -86,7 +82,7 @@ public class UserEditFragment extends EditFragment {
 
   private void sendMessageEditUser() {
     final String url = "http://152.96.56.38:8080/User/update";
-    RestClientEditProfilePatch task = new RestClientEditProfilePatch(actualuser);
+    RestClientEditProfilePatch task = new RestClientEditProfilePatch(actualuser, token);
     task.execute(url);
   }
 
@@ -131,7 +127,6 @@ public class UserEditFragment extends EditFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(UserEditViewModel.class);
   }
 
   @Override

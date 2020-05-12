@@ -80,9 +80,7 @@ public class Login extends AppCompatActivity {
             new Observer<String>() {
               @Override
               public void onChanged(@Nullable String loginResult) {
-                if (loginResult
-                    == null) { // Je nach Antwort unterscheiden was Problem war User nicht
-                  // gefunden...
+                if (loginResult == null) {
                   showLoginFailed();
                   return;
                 } else {
@@ -90,8 +88,20 @@ public class Login extends AppCompatActivity {
                   returnIntent.putExtra("usertoken", loginResult);
                   setResult(Activity.RESULT_OK, returnIntent);
                   finish();
-                  //
                 }
+                loadingProgressBar.setVisibility(View.GONE);
+              }
+            });
+
+    final Activity login = this;
+    loginViewModel
+        .getLoginFailMessage()
+        .observe(
+            this,
+            new Observer<String>() {
+              @Override
+              public void onChanged(String s) {
+                Toast.makeText(login, s, Toast.LENGTH_SHORT).show();
                 loadingProgressBar.setVisibility(View.GONE);
               }
             });
@@ -163,5 +173,10 @@ public class Login extends AppCompatActivity {
 
   private void showLoginFailed() {
     Toast.makeText(getApplicationContext(), "Versuchen Sie es erneut", Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void onBackPressed() {
+    moveTaskToBack(false);
   }
 }
