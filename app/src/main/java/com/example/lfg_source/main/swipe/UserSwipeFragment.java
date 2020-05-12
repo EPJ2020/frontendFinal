@@ -27,9 +27,11 @@ public class UserSwipeFragment extends SwipeFragment {
   private UserSwipeViewModel mViewModel;
   private List<User> usersToSwipe = new ArrayList<>();
   private boolean isInit = true;
+  private String token;
 
-  public UserSwipeFragment(Group groupThatSearches) {
+  public UserSwipeFragment(Group groupThatSearches, String token) {
     this.groupThatSearches = groupThatSearches;
+    this.token = token;
   }
 
   @Override
@@ -51,6 +53,7 @@ public class UserSwipeFragment extends SwipeFragment {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(UserSwipeViewModel.class);
     mViewModel.setGroup(groupThatSearches);
+    mViewModel.setToken(token);
     final Observer<List<User>> userObserver =
         new Observer<List<User>>() {
           @Override
@@ -81,11 +84,11 @@ public class UserSwipeFragment extends SwipeFragment {
       usersToSwipe.remove(0);
       age.setVisibility(View.GONE);
       gender.setVisibility(View.GONE);
-      if (usersToSwipe.get(0).getGender() != null) {
+      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getGender() != null) {
         gender.setText("Geschlecht: " + usersToSwipe.get(0).getGender());
         gender.setVisibility(View.VISIBLE);
       }
-      if (usersToSwipe.get(0).getAge() != null) {
+      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getAge() != null) {
         gender.setText("Alter: " + usersToSwipe.get(0).getGender());
         gender.setVisibility(View.VISIBLE);
       }
@@ -114,7 +117,7 @@ public class UserSwipeFragment extends SwipeFragment {
   @Override
   public void sendMessage(AnswerEntity answer) {
     final String url = "http://152.96.56.38:8080/Group/MatchesAnswer";
-    RestClientAnswerPost task = new RestClientAnswerPost(answer);
+    RestClientAnswerPost task = new RestClientAnswerPost(answer, token);
     task.execute(url);
   }
 }

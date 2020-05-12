@@ -17,9 +17,11 @@ import java.net.URI;
 public class RestClientEditGroupPatch extends AsyncTask<String, Void, Void> {
   private Group message;
   private String url;
+  private String token;
 
-  public RestClientEditGroupPatch(Group message) {
+  public RestClientEditGroupPatch(Group message, String token) {
     this.message = message;
+    this.token = token;
   }
 
   @Override
@@ -29,10 +31,9 @@ public class RestClientEditGroupPatch extends AsyncTask<String, Void, Void> {
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
-      HttpEntity<String> entity = new HttpEntity<String>(headers);
+      headers.add("authorization", "Bearer " + token);
       restTemplate.getRequestFactory().createRequest(new URI(url), HttpMethod.PATCH);
-
-      final HttpEntity<Group> requestEntity = new HttpEntity<>(message);
+      final HttpEntity<Group> requestEntity = new HttpEntity<>(message, headers);
       ResponseEntity<Group> response =
           restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, Group.class);
     } catch (Exception e) {

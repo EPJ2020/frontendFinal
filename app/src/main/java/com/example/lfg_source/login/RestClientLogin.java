@@ -37,11 +37,16 @@ public class RestClientLogin extends AsyncTask<String, Void, ResponseEntity<Stri
   }
 
   protected void onPostExecute(ResponseEntity<String> result) {
-    HttpStatus statusCode = result.getStatusCode();
-    if (statusCode != HttpStatus.OK) {
-      // TODO ERROR Message
+    if (result == null) {
+      loginViewModel.setLoginFailMessage("Login fehlgeschlagen");
     } else {
-      loginViewModel.setLoginData(result.getBody());
+      HttpStatus statusCode = result.getStatusCode();
+      if (statusCode != HttpStatus.OK) {
+        loginViewModel.setLoginFailMessage("Login fehlgeschlagen");
+        System.out.println(statusCode);
+      } else {
+        loginViewModel.setLoginData(result.getBody());
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ public class HomeViewModel extends ViewModel {
   private MutableLiveData<List<Group>> groupList;
   private String token;
 
-  public void setToken(String token){
+  public void setToken(String token) {
     this.token = token;
   }
 
@@ -28,7 +28,7 @@ public class HomeViewModel extends ViewModel {
 
   public void sendMessageGroup() {
     final String url = "http://152.96.56.38:8080/User/MyGroups";
-    RestClientHome task = new RestClientHome(this,token);
+    RestClientHome task = new RestClientHome(this, token);
     task.execute(url);
   }
 }

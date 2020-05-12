@@ -2,7 +2,6 @@ package com.example.lfg_source.main.edit;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -21,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
@@ -36,7 +34,6 @@ public class GroupEditFragment extends EditFragment {
 
   private static final int LOCATION_PERMISSION = 42;
   User groupAdminUser;
-  private GroupEditViewModel mViewModel;
   private Group actualGroup;
   private Boolean isNewGroup = false;
   private Button delete;
@@ -95,9 +92,9 @@ public class GroupEditFragment extends EditFragment {
     addLogationButton.setOnClickListener(
         new View.OnClickListener() {
           public void onClick(View v) {
-            if (!(ContextCompat.checkSelfPermission(
+            if ((ContextCompat.checkSelfPermission(
                     getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED)) {
+                != PackageManager.PERMISSION_GRANTED)) {
               ActivityCompat.requestPermissions(
                   getActivity(),
                   new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
@@ -147,7 +144,7 @@ public class GroupEditFragment extends EditFragment {
           @Override
           public void onClick(View v) {
             final String url = "http://152.96.56.38:8080/Group/" + actualGroup.getGroupId();
-            RestClientDeleteGroup task = new RestClientDeleteGroup();
+            RestClientDeleteGroup task = new RestClientDeleteGroup(token);
             task.execute(url);
             goToHome(groupAdminUser);
           }
@@ -172,13 +169,13 @@ public class GroupEditFragment extends EditFragment {
 
   private void sendMessageNewGroup() {
     final String url = "http://152.96.56.38:8080/Group";
-    RestClientNewGroupPost task = new RestClientNewGroupPost(actualGroup);
+    RestClientNewGroupPost task = new RestClientNewGroupPost(actualGroup, token);
     task.execute(url);
   }
 
   private void sendMessageEditGroup() {
     final String url = "http://152.96.56.38:8080/Group/update";
-    RestClientEditGroupPatch task = new RestClientEditGroupPatch(actualGroup);
+    RestClientEditGroupPatch task = new RestClientEditGroupPatch(actualGroup, token);
     task.execute(url);
   }
 
@@ -197,7 +194,6 @@ public class GroupEditFragment extends EditFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(GroupEditViewModel.class);
   }
 
   private boolean validateGroupName() {

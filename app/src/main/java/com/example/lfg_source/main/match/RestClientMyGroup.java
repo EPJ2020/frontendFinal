@@ -1,8 +1,8 @@
-package com.example.lfg_source.main.swipe;
+package com.example.lfg_source.main.match;
 
 import android.os.AsyncTask;
 
-import com.example.lfg_source.entity.User;
+import com.example.lfg_source.entity.Group;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,27 +15,26 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RestClientUserSwipe extends AsyncTask<String, Void, ResponseEntity<User[]>> {
-  private UserSwipeViewModel swipeViewModel;
+public class RestClientMyGroup extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
+  private MatchViewModel matchViewModel;
   private String token;
 
-  public RestClientUserSwipe(UserSwipeViewModel swipeViewModel, String token) {
-    this.swipeViewModel = swipeViewModel;
+  public RestClientMyGroup(MatchViewModel matchViewModel, String token) {
+    this.matchViewModel = matchViewModel;
     this.token = token;
   }
 
   @Override
-  protected ResponseEntity<User[]> doInBackground(String... uri) {
+  protected ResponseEntity<Group[]> doInBackground(String... uri) {
     final String url = uri[0];
     RestTemplate restTemplate = new RestTemplate();
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
       HttpHeaders headers = new HttpHeaders();
       headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
-      ResponseEntity<User[]> response =
-          restTemplate.exchange(url, HttpMethod.GET, entity, User[].class);
+      ResponseEntity<Group[]> response =
+          restTemplate.exchange(url, HttpMethod.GET, entity, Group[].class);
       return response;
     } catch (Exception e) {
       String message = e.getMessage();
@@ -43,8 +42,10 @@ public class RestClientUserSwipe extends AsyncTask<String, Void, ResponseEntity<
     }
   }
 
-  protected void onPostExecute(ResponseEntity<User[]> result) {
-    HttpStatus statusCode = result.getStatusCode();
-    swipeViewModel.setData(new ArrayList<User>(Arrays.asList(result.getBody())));
+  protected void onPostExecute(ResponseEntity<Group[]> result) {
+    if (result != null) {
+      HttpStatus statusCode = result.getStatusCode();
+      matchViewModel.setDataGroupAdmin(new ArrayList<Group>(Arrays.asList(result.getBody())));
+    }
   }
 }

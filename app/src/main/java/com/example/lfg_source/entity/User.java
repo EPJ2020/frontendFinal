@@ -1,5 +1,7 @@
 package com.example.lfg_source.entity;
 
+import androidx.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
@@ -102,6 +104,12 @@ public class User implements Serializable {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  @NonNull
+  @Override
+  public String toString() {
+    return firstName;
   }
 
   public String getAge() {

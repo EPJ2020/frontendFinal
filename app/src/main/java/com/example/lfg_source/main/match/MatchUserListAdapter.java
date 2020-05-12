@@ -10,14 +10,14 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lfg_source.R;
-import com.example.lfg_source.entity.Group;
+import com.example.lfg_source.entity.User;
 
 import java.util.List;
 
-public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyViewHolder> {
-  private List<Group> groupList;
+public class MatchUserListAdapter extends RecyclerView.Adapter<MatchUserListAdapter.MyViewHolder> {
+  private List<User> memberList;
   private RecyclerView recyclerView;
-  private MatchFragment context;
+  private MatchUserFragment context;
 
   public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -35,14 +35,15 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
     }
   }
 
-  public MatchListAdapter(List<Group> groupList, RecyclerView recyclerView, MatchFragment context) {
-    this.groupList = groupList;
+  public MatchUserListAdapter(
+      List<User> list, RecyclerView recyclerView, MatchUserFragment context) {
+    this.memberList = list;
     this.recyclerView = recyclerView;
     this.context = context;
   }
 
-  public void changeGroupList(List<Group> groupList) {
-    this.groupList = groupList;
+  public void changeGroupList(List<User> list) {
+    this.memberList = list;
   }
 
   @Override
@@ -54,19 +55,18 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
 
   @Override
   public void onBindViewHolder(final MyViewHolder holder, final int position) {
-    final Object object = groupList.get(position);
-    if (object instanceof Group) {
-      final Group group = (Group) object;
-      holder.name.setText(group.getName());
+    final Object object = memberList.get(position);
+    if (object instanceof User) {
+      final User user = (User) object;
+      holder.name.setText(user.getFirstName() + " " + user.getLastName());
       holder.phoneButton.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              Toast.makeText(context.getActivity(), group.getPhoneNumber(), Toast.LENGTH_SHORT)
-                  .show();
+              Toast.makeText(context.getActivity(), user.getPhone(), Toast.LENGTH_SHORT).show();
             }
           });
-      if (group.getPhoneNumber() == null) {
+      if (user.getPhone() == null) {
         holder.phoneButton.setVisibility(View.GONE);
       }
 
@@ -74,10 +74,10 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              Toast.makeText(context.getActivity(), group.getEmail(), Toast.LENGTH_SHORT).show();
+              Toast.makeText(context.getActivity(), user.getEmail(), Toast.LENGTH_SHORT).show();
             }
           });
-      if (group.getPhoneNumber() == null) {
+      if (user.getPhone() == null) {
         holder.mailButton.setVisibility(View.GONE);
       }
     }
@@ -85,6 +85,6 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
 
   @Override
   public int getItemCount() {
-    return groupList.size();
+    return memberList.size();
   }
 }

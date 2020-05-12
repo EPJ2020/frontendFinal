@@ -8,6 +8,11 @@ import java.util.List;
 
 public class UserSwipeViewModel<User> extends androidx.lifecycle.ViewModel {
   private MutableLiveData<List<User>> data;
+  private String token;
+
+  public void setToken(String token) {
+    this.token = token;
+  }
 
   public void setData(List<User> data) {
     this.data.setValue(data);
@@ -28,7 +33,7 @@ public class UserSwipeViewModel<User> extends androidx.lifecycle.ViewModel {
 
   public void sendMessage() {
     final String url = "http://152.96.56.38:8080/Group/Suggestions/" + group.getGroupId();
-    RestClientUserSwipe task = new RestClientUserSwipe(this);
+    RestClientUserSwipe task = new RestClientUserSwipe(this, token);
     task.execute(url);
   }
 }

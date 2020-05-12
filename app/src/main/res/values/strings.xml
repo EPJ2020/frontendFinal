@@ -31,6 +31,8 @@
     <string name="beschreibe_dich">Beschreibe dich</string>
     <string name="ablehnen"><![CDATA[< Ablehnen]]></string>
     <string name="annehmen"><![CDATA[Annehmen >]]></string>
+    <string name="preference_file_Groups">File Groups</string>
+    <string name="hilfe">Hilfe</string>
     <string name="info_button">info-Button</string>
     <string name="alter">Alter</string>
     <string name="geschlecht">Geschlecht</string>

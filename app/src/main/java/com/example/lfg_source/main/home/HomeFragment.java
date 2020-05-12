@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
+import com.example.lfg_source.main.MainActivity;
 import com.example.lfg_source.main.edit.GroupEditFragment;
 import com.example.lfg_source.main.edit.UserEditFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.home_fragment, container, false);
-
+    ((MainActivity) getActivity()).setNullToolbar("Home");
     yourProfileView = view.findViewById(R.id.yourProfile);
     final TextView yourProfileText = yourProfileView.findViewById(R.id.homeListEntryName);
     yourProfileText.setText(loggedInUser.getFirstName());
@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            GroupSwipeFragment nextFrag = new GroupSwipeFragment(loggedInUser.getId());
+            GroupSwipeFragment nextFrag = new GroupSwipeFragment(loggedInUser.getId(), token);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -85,6 +85,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            ((MainActivity) getActivity()).setNullToolbar("Profil bearbeiten");
             UserEditFragment nextFrag = new UserEditFragment(loggedInUser, token);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);

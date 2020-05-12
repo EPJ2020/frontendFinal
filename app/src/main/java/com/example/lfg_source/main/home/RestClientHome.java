@@ -31,9 +31,10 @@ public class RestClientHome extends AsyncTask<String, Void, ResponseEntity<Group
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
-      headers.add("authorization", "Bearer "+token);
+      headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
-      ResponseEntity<Group[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Group[].class);
+      ResponseEntity<Group[]> response =
+          restTemplate.exchange(url, HttpMethod.GET, entity, Group[].class);
       return response;
     } catch (Exception e) {
       String message = e.getMessage();

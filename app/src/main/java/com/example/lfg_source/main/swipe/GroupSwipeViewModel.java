@@ -2,16 +2,19 @@ package com.example.lfg_source.main.swipe;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.lfg_source.entity.Group;
-
 import java.util.List;
 
-public class GroupSwipeViewModel<Groups> extends androidx.lifecycle.ViewModel {
+public class GroupSwipeViewModel<Group> extends androidx.lifecycle.ViewModel {
 
   private MutableLiveData<List<Group>> data;
+  private String token;
 
   public void setData(List<Group> data) {
     this.data.setValue(data);
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
   public MutableLiveData<List<Group>> getData() {
@@ -28,8 +31,8 @@ public class GroupSwipeViewModel<Groups> extends androidx.lifecycle.ViewModel {
   }
 
   public void sendMessage() {
-    final String url = "http://152.96.56.38:8080/User/Suggestions/" + userId;
-    RestClientGroupSwipe task = new RestClientGroupSwipe(this);
+    final String url = "http://152.96.56.38:8080/User/Suggestions";
+    RestClientGroupSwipe task = new RestClientGroupSwipe(this, token);
     task.execute(url);
   }
 }

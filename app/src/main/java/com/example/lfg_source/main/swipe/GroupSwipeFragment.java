@@ -24,9 +24,11 @@ public class GroupSwipeFragment extends SwipeFragment {
   private boolean isInit = true;
   private List<Group> groupsToSwipe = new ArrayList<>();
   private TextView location;
+  private String token;
 
-  public GroupSwipeFragment(int loggedInUserId) {
+  public GroupSwipeFragment(int loggedInUserId, String token) {
     userId = loggedInUserId;
+    this.token = token;
   }
 
   @Override
@@ -46,6 +48,7 @@ public class GroupSwipeFragment extends SwipeFragment {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(GroupSwipeViewModel.class);
     mViewModel.setUserId(userId);
+    mViewModel.setToken(token);
     final Observer<List<Group>> userObserver =
         new Observer<List<Group>>() {
           @Override
@@ -101,7 +104,7 @@ public class GroupSwipeFragment extends SwipeFragment {
   @Override
   public void sendMessage(AnswerEntity answer) {
     final String url = "http://152.96.56.38:8080/User/MatchesAnswer";
-    RestClientAnswerPost task = new RestClientAnswerPost(answer);
+    RestClientAnswerPost task = new RestClientAnswerPost(answer, token);
     task.execute(url);
   }
 }

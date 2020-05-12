@@ -17,9 +17,11 @@ import java.net.URI;
 public class RestClientEditProfilePatch extends AsyncTask<String, Void, Void> {
   private User message;
   private String url;
+  private String token;
 
-  public RestClientEditProfilePatch(User message) {
+  public RestClientEditProfilePatch(User message, String token) {
     this.message = message;
+    this.token = token;
   }
 
   @Override
@@ -29,10 +31,9 @@ public class RestClientEditProfilePatch extends AsyncTask<String, Void, Void> {
     try {
       restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
       HttpHeaders headers = new HttpHeaders();
-      HttpEntity<String> entity = new HttpEntity<String>(headers);
+      headers.add("authorization", "Bearer " + token);
       restTemplate.getRequestFactory().createRequest(new URI(url), HttpMethod.PATCH);
-
-      final HttpEntity<User> requestEntity = new HttpEntity<>(message);
+      final HttpEntity<User> requestEntity = new HttpEntity<>(message, headers);
       ResponseEntity<User> response =
           restTemplate.exchange(url, HttpMethod.PATCH, requestEntity, User.class);
     } catch (Exception e) {

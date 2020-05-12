@@ -1,5 +1,7 @@
 package com.example.lfg_source.entity;
 
+import androidx.annotation.NonNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -101,6 +103,12 @@ public class Group {
 
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
+  }
+
+  @NonNull
+  @Override
+  public String toString() {
+    return name;
   }
 
   public String getLocation() {
