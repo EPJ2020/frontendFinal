@@ -6,19 +6,19 @@ import com.example.lfg_source.entity.Group;
 
 import java.util.List;
 
-public class UserSwipeViewModel<User> extends androidx.lifecycle.ViewModel {
-  private MutableLiveData<List<User>> data;
+public class UserSwipeViewModel<UserSuggestion> extends androidx.lifecycle.ViewModel {
+  private MutableLiveData<List<UserSuggestion>> data;
   private String token;
 
   public void setToken(String token) {
     this.token = token;
   }
 
-  public void setData(List<User> data) {
+  public void setData(List<UserSuggestion> data) {
     this.data.setValue(data);
   }
 
-  public MutableLiveData<List<User>> getData() {
+  public MutableLiveData<List<UserSuggestion>> getData() {
     if (data == null) {
       data = new MutableLiveData<>();
     }

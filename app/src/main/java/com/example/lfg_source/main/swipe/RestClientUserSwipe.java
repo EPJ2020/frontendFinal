@@ -2,7 +2,7 @@ package com.example.lfg_source.main.swipe;
 
 import android.os.AsyncTask;
 
-import com.example.lfg_source.entity.User;
+import com.example.lfg_source.entity.UserSuggestion;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RestClientUserSwipe extends AsyncTask<String, Void, ResponseEntity<User[]>> {
+public class RestClientUserSwipe extends AsyncTask<String, Void, ResponseEntity<UserSuggestion[]>> {
   private UserSwipeViewModel swipeViewModel;
   private String token;
 
@@ -25,7 +25,7 @@ public class RestClientUserSwipe extends AsyncTask<String, Void, ResponseEntity<
   }
 
   @Override
-  protected ResponseEntity<User[]> doInBackground(String... uri) {
+  protected ResponseEntity<UserSuggestion[]> doInBackground(String... uri) {
     final String url = uri[0];
     RestTemplate restTemplate = new RestTemplate();
     try {
@@ -34,8 +34,8 @@ public class RestClientUserSwipe extends AsyncTask<String, Void, ResponseEntity<
       HttpHeaders headers = new HttpHeaders();
       headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
-      ResponseEntity<User[]> response =
-          restTemplate.exchange(url, HttpMethod.GET, entity, User[].class);
+      ResponseEntity<UserSuggestion[]> response =
+          restTemplate.exchange(url, HttpMethod.GET, entity, UserSuggestion[].class);
       return response;
     } catch (Exception e) {
       String message = e.getMessage();
@@ -43,8 +43,8 @@ public class RestClientUserSwipe extends AsyncTask<String, Void, ResponseEntity<
     }
   }
 
-  protected void onPostExecute(ResponseEntity<User[]> result) {
+  protected void onPostExecute(ResponseEntity<UserSuggestion[]> result) {
     HttpStatus statusCode = result.getStatusCode();
-    swipeViewModel.setData(new ArrayList<User>(Arrays.asList(result.getBody())));
+    swipeViewModel.setData(new ArrayList<UserSuggestion>(Arrays.asList(result.getBody())));
   }
 }

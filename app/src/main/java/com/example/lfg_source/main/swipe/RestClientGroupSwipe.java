@@ -2,7 +2,7 @@ package com.example.lfg_source.main.swipe;
 
 import android.os.AsyncTask;
 
-import com.example.lfg_source.entity.Group;
+import com.example.lfg_source.entity.GroupSuggestion;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +15,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RestClientGroupSwipe extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
+public class RestClientGroupSwipe
+    extends AsyncTask<String, Void, ResponseEntity<GroupSuggestion[]>> {
   private GroupSwipeViewModel swipeViewModel;
   private String token;
 
@@ -25,7 +26,7 @@ public class RestClientGroupSwipe extends AsyncTask<String, Void, ResponseEntity
   }
 
   @Override
-  protected ResponseEntity<Group[]> doInBackground(String... uri) {
+  protected ResponseEntity<GroupSuggestion[]> doInBackground(String... uri) {
     final String url = uri[0];
     RestTemplate restTemplate = new RestTemplate();
     try {
@@ -34,8 +35,8 @@ public class RestClientGroupSwipe extends AsyncTask<String, Void, ResponseEntity
       HttpHeaders headers = new HttpHeaders();
       headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
-      ResponseEntity<Group[]> response =
-          restTemplate.exchange(url, HttpMethod.GET, entity, Group[].class);
+      ResponseEntity<GroupSuggestion[]> response =
+          restTemplate.exchange(url, HttpMethod.GET, entity, GroupSuggestion[].class);
       return response;
     } catch (Exception e) {
       String message = e.getMessage();
@@ -43,8 +44,8 @@ public class RestClientGroupSwipe extends AsyncTask<String, Void, ResponseEntity
     }
   }
 
-  protected void onPostExecute(ResponseEntity<Group[]> result) {
+  protected void onPostExecute(ResponseEntity<GroupSuggestion[]> result) {
     HttpStatus statusCode = result.getStatusCode();
-    swipeViewModel.setData(new ArrayList<Group>(Arrays.asList(result.getBody())));
+    swipeViewModel.setData(new ArrayList<GroupSuggestion>(Arrays.asList(result.getBody())));
   }
 }
