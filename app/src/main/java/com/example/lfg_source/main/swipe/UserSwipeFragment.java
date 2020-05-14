@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.AnswerEntity;
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.entity.User;
+import com.example.lfg_source.entity.UserSuggestion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class UserSwipeFragment extends SwipeFragment {
   private TextView gender;
   private TextView age;
   private UserSwipeViewModel mViewModel;
-  private List<User> usersToSwipe = new ArrayList<>();
+  private List<UserSuggestion> usersToSwipe = new ArrayList<>();
   private boolean isInit = true;
   private String token;
 
@@ -54,10 +54,10 @@ public class UserSwipeFragment extends SwipeFragment {
     mViewModel = ViewModelProviders.of(this).get(UserSwipeViewModel.class);
     mViewModel.setGroup(groupThatSearches);
     mViewModel.setToken(token);
-    final Observer<List<User>> userObserver =
-        new Observer<List<User>>() {
+    final Observer<List<UserSuggestion>> userObserver =
+        new Observer<List<UserSuggestion>>() {
           @Override
-          public void onChanged(List<User> users) {
+          public void onChanged(List<UserSuggestion> users) {
             usersToSwipe.addAll(users);
             if (isInit) {
               showSuggestion();
@@ -76,20 +76,20 @@ public class UserSwipeFragment extends SwipeFragment {
     }
     if (!usersToSwipe.isEmpty()) {
       super.setViewElements(
-          usersToSwipe.get(0).getLastName(),
-          usersToSwipe.get(0).getDescription(),
-          usersToSwipe.get(0).getTags());
-      super.setProgress();
-      this.firstName.setText(usersToSwipe.get(0).getFirstName());
+          usersToSwipe.get(0).getUser().getLastName(),
+          usersToSwipe.get(0).getUser().getDescription(),
+          usersToSwipe.get(0).getUser().getTags());
+      super.setProgress(usersToSwipe.get(0).getPercent());
+      this.firstName.setText(usersToSwipe.get(0).getUser().getFirstName());
       usersToSwipe.remove(0);
       age.setVisibility(View.GONE);
       gender.setVisibility(View.GONE);
-      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getGender() != null) {
-        gender.setText("Geschlecht: " + usersToSwipe.get(0).getGender());
+      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getUser().getGender() != null) {
+        gender.setText("Geschlecht: " + usersToSwipe.get(0).getUser().getGender());
         gender.setVisibility(View.VISIBLE);
       }
-      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getAge() != null) {
-        gender.setText("Alter: " + usersToSwipe.get(0).getGender());
+      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getUser().getAge() != null) {
+        gender.setText("Alter: " + usersToSwipe.get(0).getUser().getGender());
         gender.setVisibility(View.VISIBLE);
       }
     } else {
@@ -106,7 +106,7 @@ public class UserSwipeFragment extends SwipeFragment {
     if (usersToSwipe.isEmpty()) {
       return -1;
     }
-    return usersToSwipe.get(0).getId();
+    return usersToSwipe.get(0).getUser().getId();
   }
 
   @Override

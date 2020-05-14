@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.AnswerEntity;
-import com.example.lfg_source.entity.Group;
+import com.example.lfg_source.entity.GroupSuggestion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class GroupSwipeFragment extends SwipeFragment {
   private GroupSwipeViewModel mViewModel;
   private int userId;
   private boolean isInit = true;
-  private List<Group> groupsToSwipe = new ArrayList<>();
+  private List<GroupSuggestion> groupsToSwipe = new ArrayList<>();
   private TextView location;
   private String token;
 
@@ -49,10 +49,10 @@ public class GroupSwipeFragment extends SwipeFragment {
     mViewModel = ViewModelProviders.of(this).get(GroupSwipeViewModel.class);
     mViewModel.setUserId(userId);
     mViewModel.setToken(token);
-    final Observer<List<Group>> userObserver =
-        new Observer<List<Group>>() {
+    final Observer<List<GroupSuggestion>> userObserver =
+        new Observer<List<GroupSuggestion>>() {
           @Override
-          public void onChanged(List<Group> groups) {
+          public void onChanged(List<GroupSuggestion> groups) {
             groupsToSwipe.addAll(groups);
             if (isInit) {
               showSuggestion();
@@ -71,15 +71,15 @@ public class GroupSwipeFragment extends SwipeFragment {
     }
     if (!groupsToSwipe.isEmpty()) {
       super.setViewElements(
-          groupsToSwipe.get(0).getName(),
-          groupsToSwipe.get(0).getDescription(),
-          groupsToSwipe.get(0).getTags());
+          groupsToSwipe.get(0).getGroup().getName(),
+          groupsToSwipe.get(0).getGroup().getDescription(),
+          groupsToSwipe.get(0).getGroup().getTags());
       location.setVisibility(View.GONE);
-      if (groupsToSwipe.get(0).getLocation() != null) {
-        location.setText("Treffpunkt der Gruppe: " + groupsToSwipe.get(0).getLocation());
+      if (groupsToSwipe.get(0).getGroup().getLocation() != null) {
+        location.setText("Treffpunkt der Gruppe: " + groupsToSwipe.get(0).getGroup().getLocation());
         location.setVisibility(View.VISIBLE);
       }
-      super.setProgress();
+      super.setProgress(groupsToSwipe.get(0).getPercent());
       groupsToSwipe.remove(0);
     } else {
       super.setViewElements(
@@ -98,7 +98,7 @@ public class GroupSwipeFragment extends SwipeFragment {
     if (groupsToSwipe.isEmpty()) {
       return -1;
     }
-    return groupsToSwipe.get(0).getGroupId();
+    return groupsToSwipe.get(0).getGroup().getGroupId();
   }
 
   @Override

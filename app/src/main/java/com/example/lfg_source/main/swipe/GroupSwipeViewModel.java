@@ -4,12 +4,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
-public class GroupSwipeViewModel<Group> extends androidx.lifecycle.ViewModel {
+public class GroupSwipeViewModel<GroupSuggestion> extends androidx.lifecycle.ViewModel {
 
-  private MutableLiveData<List<Group>> data;
+  private MutableLiveData<List<GroupSuggestion>> data;
   private String token;
 
-  public void setData(List<Group> data) {
+  public void setData(List<GroupSuggestion> data) {
     this.data.setValue(data);
   }
 
@@ -17,7 +17,7 @@ public class GroupSwipeViewModel<Group> extends androidx.lifecycle.ViewModel {
     this.token = token;
   }
 
-  public MutableLiveData<List<Group>> getData() {
+  public MutableLiveData<List<GroupSuggestion>> getData() {
     if (data == null) {
       data = new MutableLiveData<>();
     }

@@ -89,8 +89,8 @@ public class SwipeFragment extends Fragment {
 
   public void sendMessage(AnswerEntity answer) {}
 
-  protected void setProgress() {
-    mProgress.setProgress(60);
+  protected void setProgress(int percent) {
+    mProgress.setProgress(percent);
     mProgress.setMax(100);
     mProgress.setProgressDrawable(drawable);
   }
