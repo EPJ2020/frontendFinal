@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,21 +74,5 @@ public class MatchFragment extends Fragment {
         };
     mViewModel.getDataGroup().observe(getViewLifecycleOwner(), userObserver);
     mViewModel.sendMessage(loggedInUser.getId());
-
-    final Observer<List<Group>> groupObserver =
-        new Observer<List<Group>>() {
-          @Override
-          public void onChanged(List<Group> groups) {
-            groupAdminList = new ArrayList<>();
-            groupAdminList.addAll(groups);
-            matchListAdapter.notifyDataSetChanged();
-            if (((MainActivity) getActivity()).getSpinner().getVisibility() == View.GONE) {
-              ((MainActivity) getActivity())
-                  .setupToolbar(groupAdminList, "Match", loggedInUser, true);
-            }
-          }
-        };
-    mViewModel.getDataGroupAdmin().observe(getViewLifecycleOwner(), groupObserver);
-    mViewModel.sendMessageAdmin(loggedInUser.getId());
   }
 }

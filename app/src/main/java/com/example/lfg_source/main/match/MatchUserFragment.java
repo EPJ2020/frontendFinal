@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +53,7 @@ public class MatchUserFragment extends Fragment {
         new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
     itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
     recyclerView.addItemDecoration(itemDecorator);
-
     recyclerView.setAdapter(matchListAdapter);
-
     return view;
   }
 
@@ -65,23 +62,6 @@ public class MatchUserFragment extends Fragment {
     super.onActivityCreated(savedInstanceState);
     mViewModel = ViewModelProviders.of(this).get(MatchViewModel.class);
     mViewModel.setToken(token);
-    // groupAdminList is the List of groups where the loggedInUser is admin
-    final Observer<List<Group>> groupObserver =
-        new Observer<List<Group>>() {
-          @Override
-          public void onChanged(List<Group> groups) {
-            groupAdminList = new ArrayList<>();
-            groupAdminList.addAll(groups);
-            matchListAdapter.notifyDataSetChanged();
-            if (((MainActivity) getActivity()).getSpinner().getVisibility() == View.GONE) {
-              ((MainActivity) getActivity())
-                  .setupToolbar(groupAdminList, "Match", loggedInUser, true);
-            }
-          }
-        };
-    mViewModel.getDataGroupAdmin().observe(getViewLifecycleOwner(), groupObserver);
-    mViewModel.sendMessageAdmin(loggedInUser.getId());
-
     // List of members of the actual group where the loggedInUser is admin.
     final Observer<List<User>> memberObserver =
         new Observer<List<User>>() {

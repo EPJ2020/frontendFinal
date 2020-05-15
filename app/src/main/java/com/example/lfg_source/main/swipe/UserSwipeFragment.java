@@ -34,6 +34,10 @@ public class UserSwipeFragment extends SwipeFragment {
     this.token = token;
   }
 
+  public Group getGroupThatSearches() {
+    return groupThatSearches;
+  }
+
   @Override
   public View onCreateView(
       @NonNull LayoutInflater inflater,

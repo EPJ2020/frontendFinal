@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -32,20 +33,24 @@ import com.example.lfg_source.main.swipe.GroupSwipeFragment;
 import com.example.lfg_source.main.swipe.UserSwipeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
   private Toolbar toolbar;
-  protected Spinner spinner;
-  protected Button help;
+  private Spinner spinner;
+  private Button help;
+  private MainViewModel mainViewModel;
+  private FrameLayout fragment;
 
   private static final int requestCode = 1;
   private HomeFragment homeFragment = null;
   private Fragment selectedFragment;
   private String token;
   private User loggedInUser;
-  private Boolean isMatchFragment;
+  private Boolean isMatchFragment = false;
+  private List<Object> spinnerList = new ArrayList<>();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     toolbar = findViewById(R.id.toolbar);
     spinner = findViewById(R.id.spinner);
     help = findViewById(R.id.help_button);
+    fragment = findViewById(R.id.fragment_container);
     setupSpinnerListener();
 
     SharedPreferences preferences = this.getSharedPreferences("LFG", Context.MODE_PRIVATE);
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setup() {
-    MainViewModel mainViewModel = new MainViewModel();
+    mainViewModel = new MainViewModel();
     mainViewModel
         .getLoginUser()
         .observe(
@@ -97,6 +103,18 @@ public class MainActivity extends AppCompatActivity {
               public void onChanged(User user) {
                 loggedInUser = user;
                 finishSetup();
+              }
+            });
+    mainViewModel
+        .getGroups()
+        .observe(
+            this,
+            new Observer<List<Group>>() {
+              @Override
+              public void onChanged(List<Group> myGroups) {
+                spinnerList.clear();
+                spinnerList.addAll(myGroups);
+                setupToolbar2();
               }
             });
     mainViewModel.sendMessageUser(token);
@@ -122,9 +140,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
               switch (item.getItemId()) {
                 case R.id.action_swipe:
+                  mainViewModel.sendMessageGroup(token);
+                  isMatchFragment = false;
                   selectedFragment = new GroupSwipeFragment(loggedInUser.getId(), token);
                   break;
                 case R.id.action_Matches:
+                  mainViewModel.sendMessageGroup(token);
+                  isMatchFragment = true;
                   selectedFragment = new MatchFragment(loggedInUser, token);
                   break;
                 default:
@@ -172,27 +194,31 @@ public class MainActivity extends AppCompatActivity {
         });
   }
 
-  public Spinner getSpinner() {
-    return spinner;
-  }
-
-  public void setupToolbar(List items, String title, User user, Boolean fragment) {
-    List<Object> list = items;
-    list.add(user);
+  public void setupToolbar2() {
+    spinnerList.add(loggedInUser);
     ArrayAdapter<Object> adapter =
-        new ArrayAdapter<Object>(getApplicationContext(), R.layout.spin_item, list);
+        new ArrayAdapter<Object>(getApplicationContext(), R.layout.spin_item, spinnerList);
     adapter.setDropDownViewResource(R.layout.spin_dropdown_item);
     spinner.setVisibility(View.VISIBLE);
     help.setVisibility(View.VISIBLE);
     spinner.setAdapter(adapter);
-    spinner.setSelection(list.size() - 1);
-    toolbar.setTitle(title);
-    this.isMatchFragment = fragment;
+    Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+    if (fragment instanceof UserSwipeFragment) {
+      Group selected = ((UserSwipeFragment) fragment).getGroupThatSearches();
+      spinner.setSelection(spinnerList.indexOf(selected));
+    } else {
+      spinner.setSelection(spinnerList.size() - 1);
+    }
   }
 
   public void setNullToolbar(String title) {
     spinner.setVisibility(View.GONE);
     help.setVisibility(View.GONE);
     toolbar.setTitle(title);
+    isMatchFragment = false;
+  }
+
+  public MainViewModel getMainViewModel() {
+    return mainViewModel;
   }
 }
