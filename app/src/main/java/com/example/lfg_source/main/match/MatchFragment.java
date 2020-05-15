@@ -28,7 +28,7 @@ public class MatchFragment extends Fragment {
   private User loggedInUser;
   private MatchViewModel mViewModel;
   private MatchListAdapter matchListAdapter;
-  private List<Group> groupList = new ArrayList<>();
+  private List<Object> groupList = new ArrayList<>();
   private List<Group> groupAdminList = new ArrayList<>();
   private String token;
 

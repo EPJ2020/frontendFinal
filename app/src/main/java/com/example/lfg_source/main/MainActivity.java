@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
               selectedFragment = new MatchUserFragment(loggedInUser, group, token);
             }
             if (item instanceof User && isMatchFragment) {
-              final User group = (User) item;
               selectedFragment = new MatchFragment(loggedInUser, token);
             }
             if (item instanceof Group && !isMatchFragment) {
@@ -159,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
               selectedFragment = new UserSwipeFragment(group, token);
             }
             if (item instanceof User && !isMatchFragment) {
-              final User group = (User) item;
               selectedFragment = new GroupSwipeFragment(loggedInUser.getId(), token);
             }
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -182,9 +180,8 @@ public class MainActivity extends AppCompatActivity {
     List<Object> list = items;
     list.add(user);
     ArrayAdapter<Object> adapter =
-        new ArrayAdapter<Object>(
-            getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, list);
-    adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+        new ArrayAdapter<Object>(getApplicationContext(), R.layout.spin_item, list);
+    adapter.setDropDownViewResource(R.layout.spin_dropdown_item);
     spinner.setVisibility(View.VISIBLE);
     help.setVisibility(View.VISIBLE);
     spinner.setAdapter(adapter);
