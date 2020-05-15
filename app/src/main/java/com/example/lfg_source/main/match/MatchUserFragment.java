@@ -27,9 +27,9 @@ import java.util.List;
 public class MatchUserFragment extends Fragment {
   private User loggedInUser;
   private MatchViewModel mViewModel;
-  private MatchUserListAdapter matchListAdapter;
+  private MatchListAdapter matchListAdapter;
   private List<Group> groupAdminList = new ArrayList<>();
-  private List<User> memberList = new ArrayList<>();
+  private List<Object> memberList = new ArrayList<>();
   private Group actual;
   private String token;
 
@@ -46,7 +46,7 @@ public class MatchUserFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.match_fragment, container, false);
     final RecyclerView recyclerView = view.findViewById(R.id.yourMatchesList);
-    matchListAdapter = new MatchUserListAdapter(memberList, recyclerView, this);
+    matchListAdapter = new MatchListAdapter(memberList, recyclerView, this);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -89,6 +89,7 @@ public class MatchUserFragment extends Fragment {
           public void onChanged(List<User> members) {
             memberList = new ArrayList<>();
             memberList.addAll(members);
+            matchListAdapter.changeGroupList(memberList);
             matchListAdapter.notifyDataSetChanged();
           }
         };
