@@ -31,8 +31,7 @@ public class RestClientAnswerPost extends AsyncTask<String, Void, Void> {
       headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
       HttpEntity<AnswerEntity> request = new HttpEntity<>(message, headers);
-      ResponseEntity<Boolean> response =
-          restTemplate.postForEntity(url, request, Boolean.class);
+      ResponseEntity<Boolean> response = restTemplate.postForEntity(url, request, Boolean.class);
     } catch (Exception e) {
       String answer = e.getMessage();
     }

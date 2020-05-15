@@ -1,4 +1,4 @@
-package com.example.lfg_source.main.match;
+package com.example.lfg_source.main;
 
 import android.os.AsyncTask;
 
@@ -15,12 +15,12 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class RestClientMyGroup extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
-  private MatchViewModel matchViewModel;
+public class RestClientGroup extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
+  private MainViewModel mainViewModel;
   private String token;
 
-  public RestClientMyGroup(MatchViewModel matchViewModel, String token) {
-    this.matchViewModel = matchViewModel;
+  public RestClientGroup(MainViewModel matchViewModel, String token) {
+    this.mainViewModel = matchViewModel;
     this.token = token;
   }
 
@@ -45,7 +45,7 @@ public class RestClientMyGroup extends AsyncTask<String, Void, ResponseEntity<Gr
   protected void onPostExecute(ResponseEntity<Group[]> result) {
     if (result != null) {
       HttpStatus statusCode = result.getStatusCode();
-      matchViewModel.setDataGroupAdmin(new ArrayList<Group>(Arrays.asList(result.getBody())));
+      mainViewModel.setDataGroup(new ArrayList<Group>(Arrays.asList(result.getBody())));
     }
   }
 }

@@ -18,11 +18,9 @@ import java.util.Arrays;
 public class RestClientMatchGroup extends AsyncTask<String, Void, ResponseEntity<Group[]>> {
   public MatchViewModel swipeViewModel;
   private String token;
-  private boolean isAdmin = false;
 
-  public RestClientMatchGroup(MatchViewModel swipeViewModel, boolean isAdmin, String token) {
+  public RestClientMatchGroup(MatchViewModel swipeViewModel, String token) {
     this.swipeViewModel = swipeViewModel;
-    this.isAdmin = isAdmin;
     this.token = token;
   }
 
@@ -47,10 +45,6 @@ public class RestClientMatchGroup extends AsyncTask<String, Void, ResponseEntity
 
   protected void onPostExecute(ResponseEntity<Group[]> result) {
     HttpStatus statusCode = result.getStatusCode();
-    if (isAdmin) {
-      swipeViewModel.setDataGroupAdmin(new ArrayList<Group>(Arrays.asList(result.getBody())));
-    } else {
-      swipeViewModel.setDataGroup(new ArrayList<Group>(Arrays.asList(result.getBody())));
-    }
+    swipeViewModel.setDataGroup(new ArrayList<Group>(Arrays.asList(result.getBody())));
   }
 }

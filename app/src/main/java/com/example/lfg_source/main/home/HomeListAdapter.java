@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
+import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainViewModel;
 import com.example.lfg_source.main.edit.GroupEditFragment;
 import com.example.lfg_source.main.swipe.UserSwipeFragment;
 
@@ -26,6 +28,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
   private User loggedInUser;
   private boolean isSelected = false;
   private String token;
+  private MainViewModel mainViewModel;
 
   public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -46,12 +49,14 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
       RecyclerView recyclerView,
       HomeFragment context,
       User loggedInUser,
-      String token) {
+      String token,
+      MainViewModel mainViewModel) {
     this.groupList = groupList;
     this.recyclerView = recyclerView;
     this.context = context;
     this.loggedInUser = loggedInUser;
     this.token = token;
+    this.mainViewModel = mainViewModel;
   }
 
   public void changeGroupList(List<Group> groupList) {
@@ -73,6 +78,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            ((MainActivity) context.getActivity()).setNullToolbar(group + " Bearbeiten");
             GroupEditFragment nextFrag = new GroupEditFragment(group, loggedInUser, token);
             FragmentTransaction transaction = context.getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
@@ -101,6 +107,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            mainViewModel.sendMessageGroup(token);
             UserSwipeFragment nextFrag = new UserSwipeFragment(group, token);
             FragmentTransaction transaction = context.getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);

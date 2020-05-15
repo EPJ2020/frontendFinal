@@ -24,6 +24,7 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
 import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainViewModel;
 import com.example.lfg_source.main.edit.GroupEditFragment;
 import com.example.lfg_source.main.edit.UserEditFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment {
   private HomeListAdapter homeListAdapter;
   private View yourProfileView = null;
   private String token;
+  private MainViewModel mainViewmodel;
 
   public HomeFragment(String token, User loggedInUser) {
     this.token = token;
@@ -52,6 +54,7 @@ public class HomeFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.home_fragment, container, false);
     ((MainActivity) getActivity()).setNullToolbar("Home");
+    mainViewmodel = ((MainActivity) getActivity()).getMainViewModel();
     yourProfileView = view.findViewById(R.id.yourProfile);
     final TextView yourProfileText = yourProfileView.findViewById(R.id.homeListEntryName);
     yourProfileText.setText(loggedInUser.getFirstName());
@@ -72,6 +75,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            mainViewmodel.sendMessageGroup(token);
             GroupSwipeFragment nextFrag = new GroupSwipeFragment(loggedInUser.getId(), token);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
@@ -96,7 +100,8 @@ public class HomeFragment extends Fragment {
 
     final RecyclerView recyclerView = view.findViewById(R.id.groupSelect);
 
-    homeListAdapter = new HomeListAdapter(groupList, recyclerView, this, loggedInUser, token);
+    homeListAdapter =
+        new HomeListAdapter(groupList, recyclerView, this, loggedInUser, token, mainViewmodel);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -111,6 +116,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            ((MainActivity) getActivity()).setNullToolbar("Bearbeiten");
             GroupEditFragment nextFrag = new GroupEditFragment(loggedInUser, token);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
