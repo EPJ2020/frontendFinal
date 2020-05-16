@@ -30,13 +30,13 @@ public class LoginViewModel extends ViewModel {
 
   public void login(String username, String password) {
     final String url = "http://152.96.56.38:8080/User/login";
-    LoginEntity registerData = new LoginEntity(username, password);
+    LoginEntity registerData = new LoginEntity(username.trim(), password);
     sendMessage(registerData, url);
   }
 
   public void register(String username, String password) {
     final String url = "http://152.96.56.38:8080/User/register";
-    LoginEntity registerData = new LoginEntity(username, password);
+    LoginEntity registerData = new LoginEntity(username.trim(), password);
     sendMessage(registerData, url);
   }
 
