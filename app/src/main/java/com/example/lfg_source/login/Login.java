@@ -1,9 +1,7 @@
 package com.example.lfg_source.login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,8 +29,9 @@ public class Login extends AppCompatActivity {
   private EditText usernameEditText;
   private EditText passwordEditText;
   private Button loginButton;
-  private Button goToRegistration;
-  private Button registration;
+  private Button goToRegistrationButton;
+  private Button registrationButton;
+  private Button cancelButton;
   private ProgressBar loadingProgressBar;
 
   @Override
@@ -42,12 +41,12 @@ public class Login extends AppCompatActivity {
     usernameEditText = findViewById(R.id.username);
     passwordEditText = findViewById(R.id.password);
     loginButton = findViewById(R.id.login);
-    goToRegistration = findViewById(R.id.register);
-    registration = findViewById(R.id.register2);
+    goToRegistrationButton = findViewById(R.id.register);
+    registrationButton = findViewById(R.id.register2);
+    cancelButton = findViewById(R.id.cancelRegistration);
     loadingProgressBar = findViewById(R.id.loading);
     loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-    SharedPreferences preferences = this.getSharedPreferences("LFG", Context.MODE_PRIVATE);
     loginViewModel
         .getLoginFormState()
         .observe(
@@ -65,11 +64,7 @@ public class Login extends AppCompatActivity {
                 if (loginFormState.getPasswordError() != null) {
                   passwordEditText.setError(getString(loginFormState.getPasswordError()));
                 }
-                if (loginFormState.isDataValid()) {
-                  registration.setEnabled(true);
-                } else {
-                  registration.setEnabled(false);
-                }
+                registrationButton.setEnabled(loginFormState.isDataValid());
               }
             });
 
@@ -100,8 +95,8 @@ public class Login extends AppCompatActivity {
             this,
             new Observer<String>() {
               @Override
-              public void onChanged(String s) {
-                Toast.makeText(login, s, Toast.LENGTH_SHORT).show();
+              public void onChanged(String text) {
+                Toast.makeText(login, text, Toast.LENGTH_SHORT).show();
                 loadingProgressBar.setVisibility(View.GONE);
               }
             });
@@ -150,17 +145,29 @@ public class Login extends AppCompatActivity {
           }
         });
 
-    goToRegistration.setOnClickListener(
+    goToRegistrationButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
             loginButton.setVisibility(View.GONE);
-            goToRegistration.setVisibility(View.GONE);
-            registration.setVisibility(View.VISIBLE);
+            goToRegistrationButton.setVisibility(View.GONE);
+            registrationButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
           }
         });
 
-    registration.setOnClickListener(
+    cancelButton.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            loginButton.setVisibility(View.VISIBLE);
+            goToRegistrationButton.setVisibility(View.VISIBLE);
+            registrationButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+          }
+        });
+
+    registrationButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
