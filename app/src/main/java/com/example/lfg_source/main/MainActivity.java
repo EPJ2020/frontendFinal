@@ -30,7 +30,10 @@ import com.example.lfg_source.main.home.HomeFragment;
 import com.example.lfg_source.main.match.MatchFragment;
 import com.example.lfg_source.main.match.MatchUserFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
+import com.example.lfg_source.main.swipe.SwipeFragment;
 import com.example.lfg_source.main.swipe.UserSwipeFragment;
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
   private Button help;
   private MainViewModel mainViewModel;
   private FrameLayout fragment;
+  private ShowcaseView showCase;
 
   private static final int requestCode = 1;
   private HomeFragment homeFragment = null;
@@ -123,12 +127,20 @@ public class MainActivity extends AppCompatActivity {
   private void finishSetup() {
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    help.setOnClickListener(
+        new View.OnClickListener() {
+          public void onClick(View v) {
+            help1("Da können sie Ihre Rolle auswählen", MainActivity.this, R.id.spinner);
+          }
+        });
 
     if (loggedInUser == null) {
+      setNullToolbar("Profil erstellen");
       UserEditFragment userEditFragment = new UserEditFragment(token);
       fragmentTransaction.add(R.id.fragment_container, userEditFragment);
       fragmentTransaction.commit();
     } else {
+
       homeFragment = new HomeFragment(token, loggedInUser);
       fragmentTransaction.add(R.id.fragment_container, homeFragment);
       fragmentTransaction.commit();
@@ -161,6 +173,53 @@ public class MainActivity extends AppCompatActivity {
             }
           });
     }
+  }
+
+  private void help1(String text, Activity activity, int item) {
+    // Code Functionality ShowcaseView from https://github.com/amlcurran/ShowcaseView
+    showCase =
+        new ShowcaseView.Builder(MainActivity.this)
+            .setStyle(R.style.CustomShowcaseTheme2)
+            .setTarget(new ViewTarget(item, activity))
+            .setContentTitle("Dropdown")
+            .setContentText(text)
+            .setOnClickListener(
+                new View.OnClickListener() {
+                  public void onClick(View v) {
+                    Fragment fragment =
+                        MainActivity.this
+                            .getSupportFragmentManager()
+                            .findFragmentById(R.id.fragment_container);
+                    if (fragment instanceof SwipeFragment) {
+                      help2(
+                          "Hier werden für die Oben ausgewählte Rolle Vorschläge gezeigt, die Sie mit rechts-Swipe annehmen und mit links-Swipe ablehnen.",
+                          fragment.getActivity(),
+                          R.id.circularProgressbar);
+
+                    } else {
+                      help2(
+                          "Hier finden sie die Kontaktdaten zu den Vorschlägen, die von beiden Seiten angenommen wurden.",
+                          fragment.getActivity(),
+                          R.id.yourMatchesList);
+                    }
+                  }
+                })
+            .hideOnTouchOutside()
+            .withHoloShowcase()
+            .build();
+  }
+
+  private void help2(String text, Activity activity, int item) {
+    // Code Functionality ShowcaseView from https://github.com/amlcurran/ShowcaseView
+    showCase.hide();
+    new ShowcaseView.Builder(MainActivity.this)
+        .setStyle(R.style.CustomShowcaseTheme2)
+        .setTarget(new ViewTarget(item, activity))
+        .setContentTitle("Was ist das?")
+        .setContentText(text)
+        .hideOnTouchOutside()
+        .withHoloShowcase()
+        .build();
   }
 
   private void setupSpinnerListener() {
