@@ -8,4 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomShowcaseTheme2" parent="ShowcaseView">
+        <item name="sv_titleTextAppearance">@style/TextAppearance.ShowcaseView.Title</item>
+        <item name="sv_detailTextAppearance">@style/ShowcaseViewDetail</item>
+        <item name="sv_backgroundColor">#649ACDA9</item>
+        <item name="sv_showcaseColor">@color/Text</item>
+        <item name="sv_buttonText">@string/ok</item>
+    </style>
+
+    <style name="ShowcaseViewDetail" parent="android:style/TextAppearance">
+        <item name="android:textColor">@color/Text</item>
+    </style>
+
 </resources>
