@@ -15,9 +15,8 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
 import com.example.lfg_source.main.MainActivity;
-import com.example.lfg_source.main.MainViewModel;
 import com.example.lfg_source.main.edit.GroupEditFragment;
-import com.example.lfg_source.main.swipe.UserSwipeFragment;
+import com.example.lfg_source.service.MyService;
 
 import java.util.List;
 
@@ -26,9 +25,8 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
   private RecyclerView recyclerView;
   private HomeFragment context;
   private User loggedInUser;
-  private boolean isSelected = false;
-  private String token;
-  private MainViewModel mainViewModel;
+  private MyService service;
+  private MyService mainService;
 
   public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -49,14 +47,14 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
       RecyclerView recyclerView,
       HomeFragment context,
       User loggedInUser,
-      String token,
-      MainViewModel mainViewModel) {
+      MyService service,
+      MyService mainService) {
     this.groupList = groupList;
     this.recyclerView = recyclerView;
     this.context = context;
     this.loggedInUser = loggedInUser;
-    this.token = token;
-    this.mainViewModel = mainViewModel;
+    this.service = service;
+    this.mainService = mainService;
   }
 
   public void changeGroupList(List<Group> groupList) {
@@ -79,7 +77,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
           @Override
           public void onClick(View v) {
             ((MainActivity) context.getActivity()).setNullToolbar(group + " Bearbeiten");
-            GroupEditFragment nextFrag = new GroupEditFragment(group, loggedInUser, token);
+            GroupEditFragment nextFrag = new GroupEditFragment(group, loggedInUser, service);
             FragmentTransaction transaction = context.getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -107,12 +105,8 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            mainViewModel.sendMessageGroup(token);
-            UserSwipeFragment nextFrag = new UserSwipeFragment(group, token);
-            FragmentTransaction transaction = context.getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, nextFrag);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            mainService.sendMessageMyGroup();
+            context.setSelectedGroup(position);
           }
         });
   }

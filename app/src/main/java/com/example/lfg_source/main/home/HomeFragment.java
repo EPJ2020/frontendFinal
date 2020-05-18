@@ -24,10 +24,10 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
 import com.example.lfg_source.main.MainActivity;
-import com.example.lfg_source.main.MainViewModel;
 import com.example.lfg_source.main.edit.GroupEditFragment;
 import com.example.lfg_source.main.edit.UserEditFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
+import com.example.lfg_source.service.MyService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +35,15 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
   private User loggedInUser;
-  private HomeViewModel mViewModel;
   private List<Group> groupList = new ArrayList<>();
   private HomeListAdapter homeListAdapter;
   private View yourProfileView = null;
-  private String token;
-  private MainViewModel mainViewmodel;
+  private MyService service;
+  private MyService mainService;
+  private int selectedGroupPosition;
 
-  public HomeFragment(String token, User loggedInUser) {
-    this.token = token;
+  public HomeFragment(MyService service, User loggedInUser) {
+    this.service = service;
     this.loggedInUser = loggedInUser;
   }
 
@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.home_fragment, container, false);
     ((MainActivity) getActivity()).setNullToolbar("Home");
-    mainViewmodel = ((MainActivity) getActivity()).getMainViewModel();
+    mainService = ((MainActivity) getActivity()).getMainService();
     yourProfileView = view.findViewById(R.id.yourProfile);
     final TextView yourProfileText = yourProfileView.findViewById(R.id.homeListEntryName);
     yourProfileText.setText(loggedInUser.getFirstName());
@@ -75,12 +75,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            mainViewmodel.sendMessageGroup(token);
-            GroupSwipeFragment nextFrag = new GroupSwipeFragment(loggedInUser.getId(), token);
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, nextFrag);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            mainService.sendMessageMyGroup();
           }
         });
 
@@ -90,7 +85,7 @@ public class HomeFragment extends Fragment {
           @Override
           public void onClick(View v) {
             ((MainActivity) getActivity()).setNullToolbar("Profil bearbeiten");
-            UserEditFragment nextFrag = new UserEditFragment(loggedInUser, token);
+            UserEditFragment nextFrag = new UserEditFragment(loggedInUser, service);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -101,7 +96,7 @@ public class HomeFragment extends Fragment {
     final RecyclerView recyclerView = view.findViewById(R.id.groupSelect);
 
     homeListAdapter =
-        new HomeListAdapter(groupList, recyclerView, this, loggedInUser, token, mainViewmodel);
+        new HomeListAdapter(groupList, recyclerView, this, loggedInUser, service, mainService);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -117,7 +112,7 @@ public class HomeFragment extends Fragment {
           @Override
           public void onClick(View v) {
             ((MainActivity) getActivity()).setNullToolbar("Bearbeiten");
-            GroupEditFragment nextFrag = new GroupEditFragment(loggedInUser, token);
+            GroupEditFragment nextFrag = new GroupEditFragment(loggedInUser, service);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -149,9 +144,7 @@ public class HomeFragment extends Fragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = new HomeViewModel();
-    mViewModel.setToken(token);
-    final Observer<List<Group>> userObserver =
+    final Observer<List<Group>> myGroupObserver =
         new Observer<List<Group>>() {
           @Override
           public void onChanged(List<Group> groups) {
@@ -161,7 +154,15 @@ public class HomeFragment extends Fragment {
             homeListAdapter.notifyDataSetChanged();
           }
         };
-    mViewModel.getData().observe(getViewLifecycleOwner(), userObserver);
-    mViewModel.sendMessageGroup();
+    service.getMyGroups().observe(getViewLifecycleOwner(), myGroupObserver);
+    service.sendMessageMyGroup();
+  }
+
+  public void setSelectedGroup(int position) {
+    this.selectedGroupPosition = position;
+  }
+
+  public int getSelectedGroupPosition(){
+    return selectedGroupPosition;
   }
 }

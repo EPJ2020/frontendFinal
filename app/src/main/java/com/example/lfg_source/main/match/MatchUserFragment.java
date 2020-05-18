@@ -19,23 +19,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
+import com.example.lfg_source.service.MyService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchUserFragment extends Fragment {
   private User loggedInUser;
-  private MatchViewModel mViewModel;
   private MatchListAdapter matchListAdapter;
   private List<Group> groupAdminList = new ArrayList<>();
   private List<Object> memberList = new ArrayList<>();
   private Group actual;
-  private String token;
+  private MyService service;
 
-  public MatchUserFragment(User loggedInUser, Group group, String token) {
+  public MatchUserFragment(User loggedInUser, Group group, MyService service) {
     this.loggedInUser = loggedInUser;
     this.actual = group;
-    this.token = token;
+    this.service = service;
   }
 
   @Override
@@ -60,8 +60,6 @@ public class MatchUserFragment extends Fragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(MatchViewModel.class);
-    mViewModel.setToken(token);
     // List of members of the actual group where the loggedInUser is admin.
     final Observer<List<User>> memberObserver =
         new Observer<List<User>>() {
@@ -73,7 +71,7 @@ public class MatchUserFragment extends Fragment {
             matchListAdapter.notifyDataSetChanged();
           }
         };
-    mViewModel.getDataUser().observe(getViewLifecycleOwner(), memberObserver);
-    mViewModel.sendMessage(actual);
+    service.getMatchUsers().observe(getViewLifecycleOwner(), memberObserver);
+    service.sendMessageMatchUsers(actual);
   }
 }

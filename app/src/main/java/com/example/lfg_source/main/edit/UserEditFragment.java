@@ -10,30 +10,31 @@ import androidx.annotation.Nullable;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.User;
+import com.example.lfg_source.service.MyService;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class UserEditFragment extends EditFragment {
 
   private User actualuser;
   private Boolean isNewUser = false;
-  private String token;
+  private MyService service;
 
   private TextInputLayout inputFirstName;
   private TextInputLayout inputLastName;
   private TextInputLayout inputAge;
   private TextInputLayout inputGender;
 
-  public UserEditFragment(String token) {
+  public UserEditFragment(MyService service) {
     super();
     this.actualuser = new User();
     isNewUser = true;
-    this.token = token;
+    this.service = service;
   }
 
-  public UserEditFragment(User loggedInUser, String token) {
+  public UserEditFragment(User loggedInUser, MyService service) {
     super();
     actualuser = loggedInUser;
-    this.token = token;
+    this.service = service;
   }
 
   @Override
@@ -42,7 +43,7 @@ public class UserEditFragment extends EditFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.user_edit_fragment, container, false);
-    super.setToken(token);
+    super.setService(service);
     super.getViewElements(view);
     getUserViewElements(view);
     super.setValues(
@@ -68,22 +69,10 @@ public class UserEditFragment extends EditFragment {
     actualuser.setGender(inputGender.getEditText().getText().toString().trim());
     actualuser.setAge(inputAge.getEditText().getText().toString().trim());
     if (isNewUser) {
-      sendMessageNewUser();
+      service.sendMessageNewUser(actualuser);
     } else {
-      sendMessageEditUser();
+      service.sendMessageEditUser(actualuser);
     }
-  }
-
-  private void sendMessageNewUser() {
-    final String url = "http://152.96.56.38:8080/User";
-    RestClientNewUser task = new RestClientNewUser(actualuser, token);
-    task.execute(url);
-  }
-
-  private void sendMessageEditUser() {
-    final String url = "http://152.96.56.38:8080/User/update";
-    RestClientEditProfilePatch task = new RestClientEditProfilePatch(actualuser, token);
-    task.execute(url);
   }
 
   private boolean validateFirstName() {

@@ -4,10 +4,9 @@ import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User implements Serializable {
+public class User {
   @JsonProperty("userId")
   private Integer id;
 
