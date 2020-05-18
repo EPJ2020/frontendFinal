@@ -9,14 +9,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.AnswerEntity;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.UserSuggestion;
+import com.example.lfg_source.service.MyService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class UserSwipeFragment extends SwipeFragment {
@@ -24,18 +25,13 @@ public class UserSwipeFragment extends SwipeFragment {
   private TextView firstName;
   private TextView gender;
   private TextView age;
-  private UserSwipeViewModel mViewModel;
   private List<UserSuggestion> usersToSwipe = new ArrayList<>();
-  private boolean isInit = true;
-  private String token;
+  private MyService service;
+  private int swipedUserId;
 
-  public UserSwipeFragment(Group groupThatSearches, String token) {
+  public UserSwipeFragment(Group groupThatSearches, MyService service) {
     this.groupThatSearches = groupThatSearches;
-    this.token = token;
-  }
-
-  public Group getGroupThatSearches() {
-    return groupThatSearches;
+    this.service = service;
   }
 
   @Override
@@ -55,28 +51,23 @@ public class UserSwipeFragment extends SwipeFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(UserSwipeViewModel.class);
-    mViewModel.setGroup(groupThatSearches);
-    mViewModel.setToken(token);
     final Observer<List<UserSuggestion>> userObserver =
         new Observer<List<UserSuggestion>>() {
           @Override
           public void onChanged(List<UserSuggestion> users) {
             usersToSwipe.addAll(users);
-            if (isInit) {
-              showSuggestion();
-            }
-            isInit = false;
+            usersToSwipe = new ArrayList<>(new HashSet<>(usersToSwipe));
+            showSuggestion();
           }
         };
-    mViewModel.getData().observe(getViewLifecycleOwner(), userObserver);
-    mViewModel.sendMessage();
+    service.getUserSuggestions().observe(getViewLifecycleOwner(), userObserver);
+    service.sendMessageGetUserSuggestions(groupThatSearches);
   }
 
   @Override
   public void showSuggestion() {
     if (usersToSwipe.size() < 3) {
-      mViewModel.sendMessage();
+      service.sendMessageGetUserSuggestions(groupThatSearches);
     }
     if (!usersToSwipe.isEmpty()) {
       super.setViewElements(
@@ -85,17 +76,18 @@ public class UserSwipeFragment extends SwipeFragment {
           usersToSwipe.get(0).getUser().getTags());
       super.setProgress(usersToSwipe.get(0).getPercent());
       this.firstName.setText(usersToSwipe.get(0).getUser().getFirstName());
-      usersToSwipe.remove(0);
       age.setVisibility(View.GONE);
       gender.setVisibility(View.GONE);
-      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getUser().getGender() != null) {
+      if (!usersToSwipe.isEmpty() && usersToSwipe.get(0).getUser().getGender() != null) {
         gender.setText("Geschlecht: " + usersToSwipe.get(0).getUser().getGender());
         gender.setVisibility(View.VISIBLE);
       }
-      if (usersToSwipe.size() > 0 && usersToSwipe.get(0).getUser().getAge() != null) {
-        gender.setText("Alter: " + usersToSwipe.get(0).getUser().getGender());
+      if (!usersToSwipe.isEmpty() && usersToSwipe.get(0).getUser().getAge() != null) {
+        gender.setText("Alter: " + usersToSwipe.get(0).getUser().getAge());
         gender.setVisibility(View.VISIBLE);
       }
+      swipedUserId = usersToSwipe.get(0).getUser().getId();
+      usersToSwipe.remove(0);
     } else {
       super.setViewElements(
           "", "Zurzeit wurden leider keine Passenden Personen gefunden", new ArrayList<String>());
@@ -107,10 +99,9 @@ public class UserSwipeFragment extends SwipeFragment {
 
   @Override
   public int getUserId() {
-    if (usersToSwipe.isEmpty()) {
-      return -1;
-    }
-    return usersToSwipe.get(0).getUser().getId();
+    int userId = swipedUserId;
+    swipedUserId = -1;
+    return userId;
   }
 
   @Override
@@ -120,8 +111,6 @@ public class UserSwipeFragment extends SwipeFragment {
 
   @Override
   public void sendMessage(AnswerEntity answer) {
-    final String url = "http://152.96.56.38:8080/Group/MatchesAnswer";
-    RestClientAnswerPost task = new RestClientAnswerPost(answer, token);
-    task.execute(url);
+    service.sendMessageAnswer(answer, "Group");
   }
 }

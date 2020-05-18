@@ -9,7 +9,7 @@ public class DetectSwipeGestureListener extends GestureDetector.SimpleOnGestureL
 
   private static int Min_Swipe_Distance_X = 100;
   private static int Max_Swipe_Distance_X = 1000;
-  private SwipeFragment swipeFragment = null;
+  private SwipeFragment swipeFragment;
 
   public DetectSwipeGestureListener(SwipeFragment swipeFragment) {
     this.swipeFragment = swipeFragment;

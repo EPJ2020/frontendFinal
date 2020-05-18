@@ -1,6 +1,7 @@
 package com.example.lfg_source.main.edit;
 
 import android.Manifest;
+import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -24,6 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
+import com.example.lfg_source.service.MyService;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
@@ -39,7 +41,7 @@ public class GroupEditFragment extends EditFragment {
   private Button delete;
   private LocationManager locationManager;
   private Button addLogationButton;
-  private String token;
+  private MyService service;
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   public TextView showLocation;
@@ -48,19 +50,19 @@ public class GroupEditFragment extends EditFragment {
 
   private TextInputLayout inputGroupName;
 
-  public GroupEditFragment(User groupAdminUser, String token) {
+  public GroupEditFragment(User groupAdminUser, MyService service) {
     super();
     this.groupAdminUser = groupAdminUser;
     this.actualGroup = new Group(groupAdminUser.getId());
     isNewGroup = true;
-    this.token = token;
+    this.service = service;
   }
 
-  public GroupEditFragment(Group group, User groupAdminUser, String token) {
+  public GroupEditFragment(Group group, User groupAdminUser, MyService service) {
     super();
     this.groupAdminUser = groupAdminUser;
     actualGroup = group;
-    this.token = token;
+    this.service = service;
   }
 
   @Override
@@ -69,7 +71,7 @@ public class GroupEditFragment extends EditFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.group_edit_fragment, container, false);
-    super.setToken(token);
+    super.setService(service);
     super.getViewElements(view);
     getGroupViewElements(view);
     super.setValues(
@@ -143,9 +145,7 @@ public class GroupEditFragment extends EditFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            final String url = "http://152.96.56.38:8080/Group/" + actualGroup.getGroupId();
-            RestClientDeleteGroup task = new RestClientDeleteGroup(token);
-            task.execute(url);
+            service.sendMessageDeleteGroup(actualGroup);
             goToHome(groupAdminUser);
           }
         });
@@ -161,22 +161,10 @@ public class GroupEditFragment extends EditFragment {
         super.getInputEmail(),
         super.getTags());
     if (isNewGroup) {
-      sendMessageNewGroup();
+      service.sendMessageNewGroup(actualGroup);
     } else {
-      sendMessageEditGroup();
+      service.sendMessageEditGroup(actualGroup);
     }
-  }
-
-  private void sendMessageNewGroup() {
-    final String url = "http://152.96.56.38:8080/Group";
-    RestClientNewGroupPost task = new RestClientNewGroupPost(actualGroup, token);
-    task.execute(url);
-  }
-
-  private void sendMessageEditGroup() {
-    final String url = "http://152.96.56.38:8080/Group/update";
-    RestClientEditGroupPatch task = new RestClientEditGroupPatch(actualGroup, token);
-    task.execute(url);
   }
 
   private void getGroupViewElements(View view) {

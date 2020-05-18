@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -32,6 +31,7 @@ import com.example.lfg_source.main.match.MatchUserFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
 import com.example.lfg_source.main.swipe.SwipeFragment;
 import com.example.lfg_source.main.swipe.UserSwipeFragment;
+import com.example.lfg_source.service.MyService;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
   private Toolbar toolbar;
   private Spinner spinner;
   private Button help;
-  private MainViewModel mainViewModel;
-  private FrameLayout fragment;
+  private MyService service;
+  private MyService mainService;
   private ShowcaseView showCase;
 
   private static final int requestCode = 1;
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     toolbar = findViewById(R.id.toolbar);
     spinner = findViewById(R.id.spinner);
     help = findViewById(R.id.help_button);
-    fragment = findViewById(R.id.fragment_container);
     setupSpinnerListener();
 
     SharedPreferences preferences = this.getSharedPreferences("LFG", Context.MODE_PRIVATE);
@@ -97,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setup() {
-    mainViewModel = new MainViewModel();
-    mainViewModel
+    mainService = new MyService(token);
+    mainService
         .getLoginUser()
         .observe(
             this,
@@ -109,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
                 finishSetup();
               }
             });
-    mainViewModel
-        .getGroups()
+    mainService
+        .getMyGroups()
         .observe(
             this,
             new Observer<List<Group>>() {
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 setupToolbar2();
               }
             });
-    mainViewModel.sendMessageUser(token);
+    mainService.sendMessageLoginUser();
   }
 
   private void finishSetup() {
@@ -133,15 +132,14 @@ public class MainActivity extends AppCompatActivity {
             help1("Da können sie Ihre Rolle auswählen", MainActivity.this, R.id.spinner);
           }
         });
-
+    service = new MyService(token);
     if (loggedInUser == null) {
-      setNullToolbar("Profil erstellen");
-      UserEditFragment userEditFragment = new UserEditFragment(token);
+      setNullToolbar("Profil anlegen");
+      UserEditFragment userEditFragment = new UserEditFragment(service);
       fragmentTransaction.add(R.id.fragment_container, userEditFragment);
       fragmentTransaction.commit();
     } else {
-
-      homeFragment = new HomeFragment(token, loggedInUser);
+      homeFragment = new HomeFragment(service, loggedInUser);
       fragmentTransaction.add(R.id.fragment_container, homeFragment);
       fragmentTransaction.commit();
 
@@ -152,17 +150,18 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
               switch (item.getItemId()) {
                 case R.id.action_swipe:
-                  mainViewModel.sendMessageGroup(token);
+                  mainService.sendMessageMyGroup();
                   isMatchFragment = false;
-                  selectedFragment = new GroupSwipeFragment(loggedInUser.getId(), token);
+                  selectedFragment = new GroupSwipeFragment(loggedInUser, service);
                   break;
                 case R.id.action_Matches:
-                  mainViewModel.sendMessageGroup(token);
+                  mainService.sendMessageMyGroup();
                   isMatchFragment = true;
-                  selectedFragment = new MatchFragment(loggedInUser, token);
+                  selectedFragment = new MatchFragment(service);
                   break;
                 default:
-                  selectedFragment = new HomeFragment(token, loggedInUser);
+                  selectedFragment = new HomeFragment(service, loggedInUser);
+                  isMatchFragment = false;
                   break;
               }
               getSupportFragmentManager()
@@ -223,23 +222,24 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupSpinnerListener() {
+    service = new MyService(token);
     spinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             Object item = parent.getItemAtPosition(pos);
             if (item instanceof Group && isMatchFragment) {
               final Group group = (Group) item;
-              selectedFragment = new MatchUserFragment(loggedInUser, group, token);
+              selectedFragment = new MatchUserFragment(loggedInUser, group, service);
             }
             if (item instanceof User && isMatchFragment) {
-              selectedFragment = new MatchFragment(loggedInUser, token);
+              selectedFragment = new MatchFragment(service);
             }
             if (item instanceof Group && !isMatchFragment) {
               final Group group = (Group) item;
-              selectedFragment = new UserSwipeFragment(group, token);
+              selectedFragment = new UserSwipeFragment(group, service);
             }
             if (item instanceof User && !isMatchFragment) {
-              selectedFragment = new GroupSwipeFragment(loggedInUser.getId(), token);
+              selectedFragment = new GroupSwipeFragment(loggedInUser, service);
             }
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -262,10 +262,10 @@ public class MainActivity extends AppCompatActivity {
     help.setVisibility(View.VISIBLE);
     spinner.setAdapter(adapter);
     Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-    if (fragment instanceof UserSwipeFragment) {
-      Group selected = ((UserSwipeFragment) fragment).getGroupThatSearches();
-      spinner.setSelection(spinnerList.indexOf(selected));
-    } else {
+    if(fragment instanceof HomeFragment){
+      spinner.setSelection(((HomeFragment) fragment).getSelectedGroupPosition());
+    }
+    else {
       spinner.setSelection(spinnerList.size() - 1);
     }
   }
@@ -277,7 +277,12 @@ public class MainActivity extends AppCompatActivity {
     isMatchFragment = false;
   }
 
-  public MainViewModel getMainViewModel() {
-    return mainViewModel;
+  public MyService getMainService() {
+    return mainService;
+  }
+
+  @Override
+  public void onBackPressed() {
+    moveTaskToBack(false);
   }
 }

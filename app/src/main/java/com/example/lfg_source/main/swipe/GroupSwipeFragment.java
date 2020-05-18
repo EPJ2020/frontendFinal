@@ -9,26 +9,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.AnswerEntity;
 import com.example.lfg_source.entity.GroupSuggestion;
+import com.example.lfg_source.entity.User;
+import com.example.lfg_source.service.MyService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class GroupSwipeFragment extends SwipeFragment {
-  private GroupSwipeViewModel mViewModel;
-  private int userId;
-  private boolean isInit = true;
+  private User user;
   private List<GroupSuggestion> groupsToSwipe = new ArrayList<>();
   private TextView location;
-  private String token;
+  private MyService service;
+  private int swipedGroupId;
 
-  public GroupSwipeFragment(int loggedInUserId, String token) {
-    userId = loggedInUserId;
-    this.token = token;
+  public GroupSwipeFragment(User loggedInUser, MyService service) {
+    user = loggedInUser;
+    this.service = service;
   }
 
   @Override
@@ -46,28 +47,23 @@ public class GroupSwipeFragment extends SwipeFragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(GroupSwipeViewModel.class);
-    mViewModel.setUserId(userId);
-    mViewModel.setToken(token);
     final Observer<List<GroupSuggestion>> userObserver =
         new Observer<List<GroupSuggestion>>() {
           @Override
           public void onChanged(List<GroupSuggestion> groups) {
             groupsToSwipe.addAll(groups);
-            if (isInit) {
-              showSuggestion();
-            }
-            isInit = false;
+            groupsToSwipe = new ArrayList<>(new HashSet<>(groupsToSwipe));
+            showSuggestion();
           }
         };
-    mViewModel.getData().observe(getViewLifecycleOwner(), userObserver);
-    mViewModel.sendMessage();
+    service.getGroupSuggestions().observe(getViewLifecycleOwner(), userObserver);
+    service.sendMessageGetGroupSuggestions();
   }
 
   @Override
   public void showSuggestion() {
     if (groupsToSwipe.size() < 3) {
-      mViewModel.sendMessage();
+      service.sendMessageGetGroupSuggestions();
     }
     if (!groupsToSwipe.isEmpty()) {
       super.setViewElements(
@@ -80,6 +76,7 @@ public class GroupSwipeFragment extends SwipeFragment {
         location.setVisibility(View.VISIBLE);
       }
       super.setProgress(groupsToSwipe.get(0).getPercent());
+      swipedGroupId = groupsToSwipe.get(0).getGroup().getGroupId();
       groupsToSwipe.remove(0);
     } else {
       super.setViewElements(
@@ -90,21 +87,18 @@ public class GroupSwipeFragment extends SwipeFragment {
 
   @Override
   public int getUserId() {
-    return userId;
+    return user.getId();
   }
 
   @Override
   public int getGroupId() {
-    if (groupsToSwipe.isEmpty()) {
-      return -1;
-    }
-    return groupsToSwipe.get(0).getGroup().getGroupId();
+    int groupId = swipedGroupId;
+    swipedGroupId = -1;
+    return groupId;
   }
 
   @Override
   public void sendMessage(AnswerEntity answer) {
-    final String url = "http://152.96.56.38:8080/User/MatchesAnswer";
-    RestClientAnswerPost task = new RestClientAnswerPost(answer, token);
-    task.execute(url);
+    service.sendMessageAnswer(answer, "User");
   }
 }

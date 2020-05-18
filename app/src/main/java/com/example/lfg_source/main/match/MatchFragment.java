@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,22 +17,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.entity.User;
+import com.example.lfg_source.service.MyService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchFragment extends Fragment {
-  private User loggedInUser;
-  private MatchViewModel mViewModel;
   private MatchListAdapter matchListAdapter;
   private List<Object> groupList = new ArrayList<>();
-  private List<Group> groupAdminList = new ArrayList<>();
-  private String token;
+  private MyService service;
 
-  public MatchFragment(User loggedInUser, String token) {
-    this.loggedInUser = loggedInUser;
-    this.token = token;
+  public MatchFragment(MyService service) {
+    this.service = service;
   }
 
   @Override
@@ -60,8 +55,6 @@ public class MatchFragment extends Fragment {
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    mViewModel = ViewModelProviders.of(this).get(MatchViewModel.class);
-    mViewModel.setToken(token);
     final Observer<List<Group>> userObserver =
         new Observer<List<Group>>() {
           @Override
@@ -72,7 +65,7 @@ public class MatchFragment extends Fragment {
             matchListAdapter.notifyDataSetChanged();
           }
         };
-    mViewModel.getDataGroup().observe(getViewLifecycleOwner(), userObserver);
-    mViewModel.sendMessage(loggedInUser.getId());
+    service.getMatchGroups().observe(getViewLifecycleOwner(), userObserver);
+    service.sendMessageMatchGroups();
   }
 }
