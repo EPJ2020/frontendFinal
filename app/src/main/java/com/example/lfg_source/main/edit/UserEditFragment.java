@@ -52,6 +52,9 @@ public class UserEditFragment extends EditFragment {
         actualuser.getPhone(),
         actualuser.getActive());
     super.setButtons(actualuser);
+    if (isNewUser) {
+      super.disableCancelButton();
+    }
     super.setUpTagContainer();
     return view;
   }
