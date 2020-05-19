@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,8 +25,7 @@ public class RestClientDeleteGroup extends AsyncTask<String, Void, Void> {
       HttpHeaders headers = new HttpHeaders();
       headers.add("authorization", "Bearer " + token);
       HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-      restTemplate.delete(url, entity);
+      restTemplate.exchange(url, HttpMethod.DELETE, entity, boolean.class);
     } catch (Exception e) {
       String answer = e.getMessage();
     }

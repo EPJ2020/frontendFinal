@@ -9,35 +9,35 @@ import androidx.lifecycle.ViewModel;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.LoginEntity;
 import com.example.lfg_source.entity.LoginFormState;
+import com.example.lfg_source.service.MyService;
 
-public class LoginViewModel extends ViewModel {
+public class LoginFacade extends ViewModel {
+  private MyService service;
 
   private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-  private MutableLiveData<String> loginResult = new MutableLiveData<>();
-  private MutableLiveData<String> loginFailMessage = new MutableLiveData<>();
+
+  protected LoginFacade() {
+    service = new MyService(null);
+  }
+
+  protected void login(String username, String password) {
+    final String url = "http://152.96.56.38:8080/User/login";
+    LoginEntity registerData = new LoginEntity(username, password);
+    service.sendMessageAutentification(registerData, url);
+  }
+
+  protected void register(String username, String password) {
+    final String url = "http://152.96.56.38:8080/User/register";
+    LoginEntity registerData = new LoginEntity(username, password);
+    service.sendMessageAutentification(registerData, url);
+  }
+
+  protected MyService getService() {
+    return service;
+  }
 
   LiveData<LoginFormState> getLoginFormState() {
     return loginFormState;
-  }
-
-  LiveData<String> getLoginFailMessage() {
-    return loginFailMessage;
-  }
-
-  LiveData<String> getLoginResult() {
-    return loginResult;
-  }
-
-  public void login(String username, String password) {
-    final String url = "http://152.96.56.38:8080/User/login";
-    LoginEntity registerData = new LoginEntity(username.trim(), password);
-    sendMessage(registerData, url);
-  }
-
-  public void register(String username, String password) {
-    final String url = "http://152.96.56.38:8080/User/register";
-    LoginEntity registerData = new LoginEntity(username.trim(), password);
-    sendMessage(registerData, url);
   }
 
   public void loginDataChanged(String username, String password) {
@@ -63,18 +63,5 @@ public class LoginViewModel extends ViewModel {
 
   private boolean isPasswordValid(String password) {
     return password != null && password.trim().length() > 5;
-  }
-
-  public void setLoginData(String data) {
-    loginResult.setValue(data);
-  }
-
-  public void setLoginFailMessage(String message) {
-    loginFailMessage.setValue(message);
-  }
-
-  public void sendMessage(LoginEntity loginEntity, String url) {
-    RestClientLogin task = new RestClientLogin(this, loginEntity);
-    task.execute(url);
   }
 }

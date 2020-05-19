@@ -31,7 +31,6 @@ import com.example.lfg_source.main.match.MatchUserFragment;
 import com.example.lfg_source.main.swipe.GroupSwipeFragment;
 import com.example.lfg_source.main.swipe.SwipeFragment;
 import com.example.lfg_source.main.swipe.UserSwipeFragment;
-import com.example.lfg_source.service.MyService;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
   private Toolbar toolbar;
   private Spinner spinner;
   private Button help;
-  private MyService service;
-  private MyService mainService;
+  private MainFacade facade;
   private ShowcaseView showCase;
 
   private static final int requestCode = 1;
@@ -96,8 +94,9 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setup() {
-    mainService = new MyService(token);
-    mainService
+    facade = new MainFacade(this);
+    facade
+        .getService()
         .getLoginUser()
         .observe(
             this,
@@ -108,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 finishSetup();
               }
             });
-    mainService
+    facade
+        .getService()
         .getMyGroups()
         .observe(
             this,
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 setupToolbar2();
               }
             });
-    mainService.sendMessageLoginUser();
+    facade.getMyProfile();
   }
 
   private void finishSetup() {
@@ -132,14 +132,13 @@ public class MainActivity extends AppCompatActivity {
             help1("Da können sie Ihre Rolle auswählen", MainActivity.this, R.id.spinner);
           }
         });
-    service = new MyService(token);
     if (loggedInUser == null) {
       setNullToolbar("Profil anlegen");
-      UserEditFragment userEditFragment = new UserEditFragment(service);
+      UserEditFragment userEditFragment = new UserEditFragment();
       fragmentTransaction.add(R.id.fragment_container, userEditFragment);
       fragmentTransaction.commit();
     } else {
-      homeFragment = new HomeFragment(service, loggedInUser);
+      homeFragment = new HomeFragment(loggedInUser);
       fragmentTransaction.add(R.id.fragment_container, homeFragment);
       fragmentTransaction.commit();
 
@@ -150,17 +149,17 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
               switch (item.getItemId()) {
                 case R.id.action_swipe:
-                  mainService.sendMessageMyGroup();
+                  facade.getMyGroups();
                   isMatchFragment = false;
-                  selectedFragment = new GroupSwipeFragment(loggedInUser, service);
+                  selectedFragment = new GroupSwipeFragment(loggedInUser);
                   break;
                 case R.id.action_Matches:
-                  mainService.sendMessageMyGroup();
+                  facade.getMyGroups();
                   isMatchFragment = true;
-                  selectedFragment = new MatchFragment(service);
+                  selectedFragment = new MatchFragment();
                   break;
                 default:
-                  selectedFragment = new HomeFragment(service, loggedInUser);
+                  selectedFragment = new HomeFragment(loggedInUser);
                   isMatchFragment = false;
                   break;
               }
@@ -222,24 +221,23 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupSpinnerListener() {
-    service = new MyService(token);
     spinner.setOnItemSelectedListener(
         new AdapterView.OnItemSelectedListener() {
           public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             Object item = parent.getItemAtPosition(pos);
             if (item instanceof Group && isMatchFragment) {
               final Group group = (Group) item;
-              selectedFragment = new MatchUserFragment(loggedInUser, group, service);
+              selectedFragment = new MatchUserFragment(group);
             }
             if (item instanceof User && isMatchFragment) {
-              selectedFragment = new MatchFragment(service);
+              selectedFragment = new MatchFragment();
             }
             if (item instanceof Group && !isMatchFragment) {
               final Group group = (Group) item;
-              selectedFragment = new UserSwipeFragment(group, service);
+              selectedFragment = new UserSwipeFragment(group);
             }
             if (item instanceof User && !isMatchFragment) {
-              selectedFragment = new GroupSwipeFragment(loggedInUser, service);
+              selectedFragment = new GroupSwipeFragment(loggedInUser);
             }
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -262,10 +260,9 @@ public class MainActivity extends AppCompatActivity {
     help.setVisibility(View.VISIBLE);
     spinner.setAdapter(adapter);
     Fragment fragment = this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-    if(fragment instanceof HomeFragment){
+    if (fragment instanceof HomeFragment) {
       spinner.setSelection(((HomeFragment) fragment).getSelectedGroupPosition());
-    }
-    else {
+    } else {
       spinner.setSelection(spinnerList.size() - 1);
     }
   }
@@ -277,8 +274,8 @@ public class MainActivity extends AppCompatActivity {
     isMatchFragment = false;
   }
 
-  public MyService getMainService() {
-    return mainService;
+  public MainFacade getMainFacade() {
+    return facade;
   }
 
   @Override

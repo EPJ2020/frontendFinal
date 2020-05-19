@@ -14,7 +14,8 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.AnswerEntity;
 import com.example.lfg_source.entity.GroupSuggestion;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.service.MyService;
+import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,12 +25,11 @@ public class GroupSwipeFragment extends SwipeFragment {
   private User user;
   private List<GroupSuggestion> groupsToSwipe = new ArrayList<>();
   private TextView location;
-  private MyService service;
   private int swipedGroupId;
+  private MainFacade facade;
 
-  public GroupSwipeFragment(User loggedInUser, MyService service) {
+  public GroupSwipeFragment(User loggedInUser) {
     user = loggedInUser;
-    this.service = service;
   }
 
   @Override
@@ -37,6 +37,7 @@ public class GroupSwipeFragment extends SwipeFragment {
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    facade = new MainFacade((MainActivity) this.getActivity());
     super.setGestureSwipe();
     View view = inflater.inflate(R.layout.group_swipe_fragment, container, false);
     super.getViewElements(view);
@@ -56,14 +57,14 @@ public class GroupSwipeFragment extends SwipeFragment {
             showSuggestion();
           }
         };
-    service.getGroupSuggestions().observe(getViewLifecycleOwner(), userObserver);
-    service.sendMessageGetGroupSuggestions();
+    facade.getService().getGroupSuggestions().observe(getViewLifecycleOwner(), userObserver);
+    facade.getGroupSuggestions();
   }
 
   @Override
   public void showSuggestion() {
     if (groupsToSwipe.size() < 3) {
-      service.sendMessageGetGroupSuggestions();
+      facade.getGroupSuggestions();
     }
     if (!groupsToSwipe.isEmpty()) {
       super.setViewElements(
@@ -99,6 +100,6 @@ public class GroupSwipeFragment extends SwipeFragment {
 
   @Override
   public void sendMessage(AnswerEntity answer) {
-    service.sendMessageAnswer(answer, "User");
+    facade.setAnswer(answer, "User");
   }
 }

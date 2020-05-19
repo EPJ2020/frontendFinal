@@ -14,7 +14,8 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.AnswerEntity;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.UserSuggestion;
-import com.example.lfg_source.service.MyService;
+import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,12 +27,11 @@ public class UserSwipeFragment extends SwipeFragment {
   private TextView gender;
   private TextView age;
   private List<UserSuggestion> usersToSwipe = new ArrayList<>();
-  private MyService service;
+  private MainFacade facade;
   private int swipedUserId;
 
-  public UserSwipeFragment(Group groupThatSearches, MyService service) {
+  public UserSwipeFragment(Group groupThatSearches) {
     this.groupThatSearches = groupThatSearches;
-    this.service = service;
   }
 
   @Override
@@ -40,6 +40,7 @@ public class UserSwipeFragment extends SwipeFragment {
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.setGestureSwipe();
+    facade = new MainFacade((MainActivity) this.getActivity());
     View view = inflater.inflate(R.layout.user_swipe_fragment, container, false);
     super.getViewElements(view);
     firstName = view.findViewById(R.id.firstname);
@@ -60,14 +61,14 @@ public class UserSwipeFragment extends SwipeFragment {
             showSuggestion();
           }
         };
-    service.getUserSuggestions().observe(getViewLifecycleOwner(), userObserver);
-    service.sendMessageGetUserSuggestions(groupThatSearches);
+    facade.getService().getUserSuggestions().observe(getViewLifecycleOwner(), userObserver);
+    facade.getUserSuggestions(groupThatSearches);
   }
 
   @Override
   public void showSuggestion() {
     if (usersToSwipe.size() < 3) {
-      service.sendMessageGetUserSuggestions(groupThatSearches);
+      facade.getUserSuggestions(groupThatSearches);
     }
     if (!usersToSwipe.isEmpty()) {
       super.setViewElements(
@@ -111,6 +112,6 @@ public class UserSwipeFragment extends SwipeFragment {
 
   @Override
   public void sendMessage(AnswerEntity answer) {
-    service.sendMessageAnswer(answer, "Group");
+    facade.setAnswer(answer, "Group");
   }
 }

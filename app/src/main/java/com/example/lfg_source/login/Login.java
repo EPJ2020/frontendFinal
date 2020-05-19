@@ -17,14 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.LoginFormState;
 
 public class Login extends AppCompatActivity {
-
-  private LoginViewModel loginViewModel;
+  private LoginFacade facade;
 
   private EditText usernameEditText;
   private EditText passwordEditText;
@@ -36,6 +34,7 @@ public class Login extends AppCompatActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    facade = new LoginFacade();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.login);
     usernameEditText = findViewById(R.id.username);
@@ -45,9 +44,8 @@ public class Login extends AppCompatActivity {
     registrationButton = findViewById(R.id.register2);
     cancelButton = findViewById(R.id.cancelRegistration);
     loadingProgressBar = findViewById(R.id.loading);
-    loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
 
-    loginViewModel
+    facade
         .getLoginFormState()
         .observe(
             this,
@@ -68,7 +66,8 @@ public class Login extends AppCompatActivity {
               }
             });
 
-    loginViewModel
+    facade
+        .getService()
         .getLoginResult()
         .observe(
             this,
@@ -89,7 +88,8 @@ public class Login extends AppCompatActivity {
             });
 
     final Activity login = this;
-    loginViewModel
+    facade
+        .getService()
         .getLoginFailMessage()
         .observe(
             this,
@@ -115,7 +115,7 @@ public class Login extends AppCompatActivity {
 
           @Override
           public void afterTextChanged(Editable s) {
-            loginViewModel.loginDataChanged(
+            facade.loginDataChanged(
                 usernameEditText.getText().toString(), passwordEditText.getText().toString());
           }
         };
@@ -128,7 +128,7 @@ public class Login extends AppCompatActivity {
           @Override
           public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-              loginViewModel.login(
+              facade.login(
                   usernameEditText.getText().toString(), passwordEditText.getText().toString());
             }
             return false;
@@ -140,7 +140,7 @@ public class Login extends AppCompatActivity {
           @Override
           public void onClick(View v) {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.login(
+            facade.login(
                 usernameEditText.getText().toString(), passwordEditText.getText().toString());
           }
         });
@@ -172,7 +172,7 @@ public class Login extends AppCompatActivity {
           @Override
           public void onClick(View v) {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            loginViewModel.register(
+            facade.register(
                 usernameEditText.getText().toString(), passwordEditText.getText().toString());
           }
         });

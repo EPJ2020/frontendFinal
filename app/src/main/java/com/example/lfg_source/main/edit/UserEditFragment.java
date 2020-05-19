@@ -10,31 +10,30 @@ import androidx.annotation.Nullable;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.service.MyService;
+import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class UserEditFragment extends EditFragment {
 
   private User actualuser;
   private Boolean isNewUser = false;
-  private MyService service;
+  private MainFacade facade;
 
   private TextInputLayout inputFirstName;
   private TextInputLayout inputLastName;
   private TextInputLayout inputAge;
   private TextInputLayout inputGender;
 
-  public UserEditFragment(MyService service) {
+  public UserEditFragment() {
     super();
     this.actualuser = new User();
     isNewUser = true;
-    this.service = service;
   }
 
-  public UserEditFragment(User loggedInUser, MyService service) {
+  public UserEditFragment(User loggedInUser) {
     super();
     actualuser = loggedInUser;
-    this.service = service;
   }
 
   @Override
@@ -42,8 +41,8 @@ public class UserEditFragment extends EditFragment {
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    facade = new MainFacade((MainActivity) getActivity());
     View view = inflater.inflate(R.layout.user_edit_fragment, container, false);
-    super.setService(service);
     super.getViewElements(view);
     getUserViewElements(view);
     super.setValues(
@@ -69,9 +68,9 @@ public class UserEditFragment extends EditFragment {
     actualuser.setGender(inputGender.getEditText().getText().toString().trim());
     actualuser.setAge(inputAge.getEditText().getText().toString().trim());
     if (isNewUser) {
-      service.sendMessageNewUser(actualuser);
+      facade.newUser(actualuser);
     } else {
-      service.sendMessageEditUser(actualuser);
+      facade.updateUser(actualuser);
     }
   }
 
