@@ -17,7 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
-import com.example.lfg_source.service.MyService;
+import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +26,9 @@ import java.util.List;
 public class MatchFragment extends Fragment {
   private MatchListAdapter matchListAdapter;
   private List<Object> groupList = new ArrayList<>();
-  private MyService service;
+  private MainFacade facade;
 
-  public MatchFragment(MyService service) {
-    this.service = service;
-  }
+  public MatchFragment() {}
 
   @Override
   public View onCreateView(
@@ -38,6 +37,7 @@ public class MatchFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.match_fragment, container, false);
     final RecyclerView recyclerView = view.findViewById(R.id.yourMatchesList);
+    facade = new MainFacade((MainActivity) getActivity());
     matchListAdapter = new MatchListAdapter(groupList, recyclerView, this);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
@@ -65,7 +65,7 @@ public class MatchFragment extends Fragment {
             matchListAdapter.notifyDataSetChanged();
           }
         };
-    service.getMatchGroups().observe(getViewLifecycleOwner(), userObserver);
-    service.sendMessageMatchGroups();
+    facade.getService().getMatchGroups().observe(getViewLifecycleOwner(), userObserver);
+    facade.getMatchGroups();
   }
 }

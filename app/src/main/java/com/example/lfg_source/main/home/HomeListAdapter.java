@@ -15,6 +15,7 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
 import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 import com.example.lfg_source.main.edit.GroupEditFragment;
 import com.example.lfg_source.service.MyService;
 
@@ -25,8 +26,8 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
   private RecyclerView recyclerView;
   private HomeFragment context;
   private User loggedInUser;
+  private MainFacade mainFacade;
   private MyService service;
-  private MyService mainService;
 
   public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -47,14 +48,12 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
       RecyclerView recyclerView,
       HomeFragment context,
       User loggedInUser,
-      MyService service,
-      MyService mainService) {
+      MainFacade mainFacade) {
     this.groupList = groupList;
     this.recyclerView = recyclerView;
     this.context = context;
     this.loggedInUser = loggedInUser;
-    this.service = service;
-    this.mainService = mainService;
+    this.mainFacade = mainFacade;
   }
 
   public void changeGroupList(List<Group> groupList) {
@@ -77,7 +76,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
           @Override
           public void onClick(View v) {
             ((MainActivity) context.getActivity()).setNullToolbar(group + " Bearbeiten");
-            GroupEditFragment nextFrag = new GroupEditFragment(group, loggedInUser, service);
+            GroupEditFragment nextFrag = new GroupEditFragment(group, loggedInUser);
             FragmentTransaction transaction = context.getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -105,7 +104,7 @@ public class HomeListAdapter extends RecyclerView.Adapter<HomeListAdapter.MyView
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            mainService.sendMessageMyGroup();
+            mainFacade.getMyGroups();
             context.setSelectedGroup(position);
           }
         });

@@ -24,10 +24,9 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
 import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 import com.example.lfg_source.main.edit.GroupEditFragment;
 import com.example.lfg_source.main.edit.UserEditFragment;
-import com.example.lfg_source.main.swipe.GroupSwipeFragment;
-import com.example.lfg_source.service.MyService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +37,11 @@ public class HomeFragment extends Fragment {
   private List<Group> groupList = new ArrayList<>();
   private HomeListAdapter homeListAdapter;
   private View yourProfileView = null;
-  private MyService service;
-  private MyService mainService;
+  private MainFacade facade;
+  private MainFacade mainFacade;
   private int selectedGroupPosition;
 
-  public HomeFragment(MyService service, User loggedInUser) {
-    this.service = service;
+  public HomeFragment(User loggedInUser) {
     this.loggedInUser = loggedInUser;
   }
 
@@ -54,7 +52,8 @@ public class HomeFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.home_fragment, container, false);
     ((MainActivity) getActivity()).setNullToolbar("Home");
-    mainService = ((MainActivity) getActivity()).getMainService();
+    mainFacade = ((MainActivity) getActivity()).getMainFacade();
+    facade = new MainFacade((MainActivity) getActivity());
     yourProfileView = view.findViewById(R.id.yourProfile);
     final TextView yourProfileText = yourProfileView.findViewById(R.id.homeListEntryName);
     yourProfileText.setText(loggedInUser.getFirstName());
@@ -75,7 +74,7 @@ public class HomeFragment extends Fragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            mainService.sendMessageMyGroup();
+            mainFacade.getMyGroups();
           }
         });
 
@@ -85,7 +84,7 @@ public class HomeFragment extends Fragment {
           @Override
           public void onClick(View v) {
             ((MainActivity) getActivity()).setNullToolbar("Profil bearbeiten");
-            UserEditFragment nextFrag = new UserEditFragment(loggedInUser, service);
+            UserEditFragment nextFrag = new UserEditFragment(loggedInUser);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -95,8 +94,7 @@ public class HomeFragment extends Fragment {
 
     final RecyclerView recyclerView = view.findViewById(R.id.groupSelect);
 
-    homeListAdapter =
-        new HomeListAdapter(groupList, recyclerView, this, loggedInUser, service, mainService);
+    homeListAdapter = new HomeListAdapter(groupList, recyclerView, this, loggedInUser, mainFacade);
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -112,7 +110,7 @@ public class HomeFragment extends Fragment {
           @Override
           public void onClick(View v) {
             ((MainActivity) getActivity()).setNullToolbar("Bearbeiten");
-            GroupEditFragment nextFrag = new GroupEditFragment(loggedInUser, service);
+            GroupEditFragment nextFrag = new GroupEditFragment(loggedInUser);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, nextFrag);
             transaction.addToBackStack(null);
@@ -154,15 +152,15 @@ public class HomeFragment extends Fragment {
             homeListAdapter.notifyDataSetChanged();
           }
         };
-    service.getMyGroups().observe(getViewLifecycleOwner(), myGroupObserver);
-    service.sendMessageMyGroup();
+    facade.getService().getMyGroups().observe(getViewLifecycleOwner(), myGroupObserver);
+    facade.getMyGroups();
   }
 
   public void setSelectedGroup(int position) {
     this.selectedGroupPosition = position;
   }
 
-  public int getSelectedGroupPosition(){
+  public int getSelectedGroupPosition() {
     return selectedGroupPosition;
   }
 }

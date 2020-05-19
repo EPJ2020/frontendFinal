@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,23 +18,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.service.MyService;
+import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MatchUserFragment extends Fragment {
-  private User loggedInUser;
   private MatchListAdapter matchListAdapter;
-  private List<Group> groupAdminList = new ArrayList<>();
   private List<Object> memberList = new ArrayList<>();
   private Group actual;
-  private MyService service;
+  private MainFacade facade;
 
-  public MatchUserFragment(User loggedInUser, Group group, MyService service) {
-    this.loggedInUser = loggedInUser;
+  public MatchUserFragment(Group group) {
     this.actual = group;
-    this.service = service;
   }
 
   @Override
@@ -46,6 +42,7 @@ public class MatchUserFragment extends Fragment {
     View view = inflater.inflate(R.layout.match_fragment, container, false);
     final RecyclerView recyclerView = view.findViewById(R.id.yourMatchesList);
     matchListAdapter = new MatchListAdapter(memberList, recyclerView, this);
+    facade = new MainFacade((MainActivity) this.getActivity());
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(view.getContext());
     recyclerView.setLayoutManager(mLayoutManager);
     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -71,7 +68,7 @@ public class MatchUserFragment extends Fragment {
             matchListAdapter.notifyDataSetChanged();
           }
         };
-    service.getMatchUsers().observe(getViewLifecycleOwner(), memberObserver);
-    service.sendMessageMatchUsers(actual);
+    facade.getService().getMatchUsers().observe(getViewLifecycleOwner(), memberObserver);
+    facade.getUsers(actual);
   }
 }

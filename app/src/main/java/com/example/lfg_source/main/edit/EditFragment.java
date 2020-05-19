@@ -14,7 +14,6 @@ import com.example.lfg_source.R;
 import com.example.lfg_source.entity.User;
 import com.example.lfg_source.main.MainActivity;
 import com.example.lfg_source.main.home.HomeFragment;
-import com.example.lfg_source.service.MyService;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ public class EditFragment extends Fragment {
   private Button btnAddTag;
   private Switch active;
   private ImageButton info;
-  private MyService service;
 
   ArrayList<String> tags = new ArrayList<String>();
 
@@ -84,10 +82,6 @@ public class EditFragment extends Fragment {
                 })
             .create();
     dialog.show();
-  }
-
-  protected void setService(MyService service) {
-    this.service = service;
   }
 
   protected void setButtons(final User loggedInUserOrGroupAdmin) {
@@ -141,7 +135,7 @@ public class EditFragment extends Fragment {
 
   protected void goToHome(User loggedInUser) {
     ((MainActivity) getActivity()).setUser(loggedInUser);
-    Fragment newFragment = new HomeFragment(service, loggedInUser);
+    Fragment newFragment = new HomeFragment(loggedInUser);
     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.fragment_container, newFragment);
     transaction.addToBackStack(null);

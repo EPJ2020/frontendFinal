@@ -1,7 +1,6 @@
 package com.example.lfg_source.main.edit;
 
 import android.Manifest;
-import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -25,7 +24,8 @@ import androidx.core.content.ContextCompat;
 import com.example.lfg_source.R;
 import com.example.lfg_source.entity.Group;
 import com.example.lfg_source.entity.User;
-import com.example.lfg_source.service.MyService;
+import com.example.lfg_source.main.MainActivity;
+import com.example.lfg_source.main.MainFacade;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class GroupEditFragment extends EditFragment {
   private Button delete;
   private LocationManager locationManager;
   private Button addLogationButton;
-  private MyService service;
+  private MainFacade facade;
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   public TextView showLocation;
@@ -50,19 +50,17 @@ public class GroupEditFragment extends EditFragment {
 
   private TextInputLayout inputGroupName;
 
-  public GroupEditFragment(User groupAdminUser, MyService service) {
+  public GroupEditFragment(User groupAdminUser) {
     super();
     this.groupAdminUser = groupAdminUser;
     this.actualGroup = new Group(groupAdminUser.getId());
     isNewGroup = true;
-    this.service = service;
   }
 
-  public GroupEditFragment(Group group, User groupAdminUser, MyService service) {
+  public GroupEditFragment(Group group, User groupAdminUser) {
     super();
     this.groupAdminUser = groupAdminUser;
     actualGroup = group;
-    this.service = service;
   }
 
   @Override
@@ -70,8 +68,8 @@ public class GroupEditFragment extends EditFragment {
       @NonNull LayoutInflater inflater,
       @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    facade = new MainFacade((MainActivity) getActivity());
     View view = inflater.inflate(R.layout.group_edit_fragment, container, false);
-    super.setService(service);
     super.getViewElements(view);
     getGroupViewElements(view);
     super.setValues(
@@ -145,7 +143,7 @@ public class GroupEditFragment extends EditFragment {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            service.sendMessageDeleteGroup(actualGroup);
+            facade.deleteGroup(actualGroup);
             goToHome(groupAdminUser);
           }
         });
@@ -161,9 +159,9 @@ public class GroupEditFragment extends EditFragment {
         super.getInputEmail(),
         super.getTags());
     if (isNewGroup) {
-      service.sendMessageNewGroup(actualGroup);
+      facade.newGroup(actualGroup);
     } else {
-      service.sendMessageEditGroup(actualGroup);
+      facade.updateGroup(actualGroup);
     }
   }
 
