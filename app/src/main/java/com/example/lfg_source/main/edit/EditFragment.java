@@ -139,6 +139,10 @@ public class EditFragment extends Fragment {
         });
   }
 
+  protected void disableCancelButton() {
+    cancel.setEnabled(false);
+  }
+
   protected void goToHome(User loggedInUser) {
     ((MainActivity) getActivity()).setUser(loggedInUser);
     Fragment newFragment = new HomeFragment(service, loggedInUser);
