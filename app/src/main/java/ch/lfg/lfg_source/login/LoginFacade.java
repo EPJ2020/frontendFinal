@@ -1,8 +1,8 @@
 package ch.lfg.lfg_source.login;
 
 import android.app.Activity;
-import android.util.Patterns;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -54,18 +54,16 @@ public class LoginFacade extends ViewModel {
     }
   }
 
-  private boolean isUserNameValid(String username) {
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+  public boolean isUserNameValid(String username) {
     if (username == null) {
       return false;
     }
-    if (username.contains("@")) {
-      return Patterns.EMAIL_ADDRESS.matcher(username).matches();
-    } else {
-      return !username.trim().isEmpty();
-    }
+    return !username.trim().isEmpty();
   }
 
-  private boolean isPasswordValid(String password) {
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+  public boolean isPasswordValid(String password) {
     return password != null && password.trim().length() >= PASSWORD_LENGTH;
   }
 }

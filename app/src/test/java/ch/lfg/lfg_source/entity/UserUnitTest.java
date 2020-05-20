@@ -6,11 +6,6 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
 public class UserUnitTest {
 
   User user = new User();
@@ -55,5 +50,11 @@ public class UserUnitTest {
 
     user.setTags(tags);
     assertEquals(tags, user.getTags());
+  }
+
+  @Test
+  public void ToString() {
+    user.setFirstName("Search");
+    assertEquals(user.getFirstName(), user.toString());
   }
 }
