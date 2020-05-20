@@ -188,6 +188,12 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences preferences =
         getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
     preferences.edit().putString(getResources().getString(R.string.usertoken), null).apply();
+    try{
+      //Some phones write the usertoken (null) too slow so the logout doesn't work properly
+      Thread.sleep(500);
+    }catch (InterruptedException e){
+      //do nothing
+    }
     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
     startActivity(intent);
     finish();
