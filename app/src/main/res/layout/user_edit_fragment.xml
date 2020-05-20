@@ -25,8 +25,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/active"
             android:layout_margin="8dp"
-            app:errorEnabled="true"
-            android:hint="@string/nachname">
+            android:hint="@string/nachname"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -45,8 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lastName"
             android:layout_margin="8dp"
-            app:errorEnabled="true"
-            android:hint="@string/vorname">
+            android:hint="@string/vorname"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -66,8 +66,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/firstName"
             android:layout_margin="8dp"
-            app:errorEnabled="true"
-            android:hint="@string/alter">
+            android:hint="@string/alter"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -86,8 +86,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/age"
             android:layout_margin="8dp"
-            app:errorEnabled="true"
-            android:hint="@string/geschlecht">
+            android:hint="@string/geschlecht"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -106,8 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/gender"
             android:layout_margin="8dp"
-            app:errorEnabled="true"
-            android:hint="@string/e_mail_adresse">
+            android:hint="@string/e_mail_adresse"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -126,8 +126,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/email"
             android:layout_margin="8dp"
-            app:errorEnabled="true"
-            android:hint="@string/telefonnummer">
+            android:hint="@string/telefonnummer"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -146,8 +146,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/phoneNumber"
             android:layout_margin="8dp"
-            app:errorEnabled="false"
-            android:hint="@string/beschreibe_dich">
+            android:hint="@string/beschreibe_dich"
+            app:errorEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -166,15 +166,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/description"
+            android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/button_info"
-            app:errorEnabled="true"
-            android:hint="@string/neuen_tag_hinzuf_gen">
+            android:hint="@string/neuen_tag_hinzuf_gen"
+            app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -197,7 +197,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/colorAccent"
-            android:text="@string/plus"/>
+            android:text="@string/plus" />
 
         <ImageButton
             android:id="@+id/button_info"
