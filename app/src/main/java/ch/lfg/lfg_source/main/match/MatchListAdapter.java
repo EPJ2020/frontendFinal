@@ -86,14 +86,14 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
     holder.lastName.setVisibility(View.GONE);
     holder.firstName.setText(group.getName());
 
-    if (group.getPhoneNumber() == null) {
-      holder.phoneButton.setVisibility(View.GONE);
+    if (group.getPhoneNumber() == null || group.getPhoneNumber().isEmpty()) {
+      holder.phoneButton.setVisibility(View.INVISIBLE);
     } else {
       setPhoneButtonListener(holder, group.getPhoneNumber());
     }
 
-    if (group.getEmail() == null) {
-      holder.mailButton.setVisibility(View.GONE);
+    if (group.getEmail() == null || group.getEmail().isEmpty()) {
+      holder.mailButton.setVisibility(View.INVISIBLE);
     } else {
       setMailButtonListener(holder, group.getEmail());
     }
@@ -110,7 +110,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
   }
 
   private void setMailButtonListener(MyViewHolder holder, final String text) {
-    holder.phoneButton.setOnClickListener(
+    holder.mailButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
