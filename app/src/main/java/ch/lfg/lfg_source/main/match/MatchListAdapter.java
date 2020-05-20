@@ -92,7 +92,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
       setPhoneButtonListener(holder, group.getPhoneNumber());
     }
 
-    if (group.getPhoneNumber() == null) {
+    if (group.getEmail() == null) {
       holder.mailButton.setVisibility(View.GONE);
     } else {
       setMailButtonListener(holder, group.getEmail());
