@@ -128,6 +128,17 @@ public class MainActivity extends AppCompatActivity {
                 setupToolbar();
               }
             });
+    facade
+        .getService()
+        .getLoginFailMessage()
+        .observe(
+            this,
+            new Observer<String>() {
+              @Override
+              public void onChanged(String s) {
+                logout();
+              }
+            });
     facade.getMyProfile();
   }
 
@@ -168,19 +179,19 @@ public class MainActivity extends AppCompatActivity {
     logoutButton.setOnClickListener(
         new View.OnClickListener() {
           public void onClick(View v) {
-            SharedPreferences preferences =
-                getSharedPreferences(
-                    getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
-            preferences
-                .edit()
-                .putString(getResources().getString(R.string.usertoken), null)
-                .apply();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-            Runtime.getRuntime().exit(0);
+            logout();
           }
         });
+  }
+
+  private void logout() {
+    SharedPreferences preferences =
+        getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+    preferences.edit().putString(getResources().getString(R.string.usertoken), null).apply();
+    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+    startActivity(intent);
+    finish();
+    Runtime.getRuntime().exit(0);
   }
 
   private void initBottomNavigation() {
@@ -216,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         });
   }
 
-  private void hideLogout(){
+  private void hideLogout() {
     logoutButton.setVisibility(View.GONE);
     homeText.setVisibility(View.GONE);
   }
