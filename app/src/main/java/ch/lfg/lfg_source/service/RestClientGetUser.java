@@ -46,6 +46,8 @@ public class RestClientGetUser<T> extends AsyncTask<Object, Void, ResponseEntity
     if (result != null) {
       HttpStatus statusCode = result.getStatusCode();
       myService.setLoginUser((User) result.getBody());
+    } else {
+      myService.setLoginFailMessage(" ");
     }
   }
 }
