@@ -8,10 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="CustomShowcaseTheme2" parent="ShowcaseView">
+    <style name="CustomShowcaseTheme" parent="ShowcaseView">
         <item name="sv_titleTextAppearance">@style/TextAppearance.ShowcaseView.Title</item>
         <item name="sv_detailTextAppearance">@style/ShowcaseViewDetail</item>
-        <item name="sv_backgroundColor">#649ACDA9</item>
+        <item name="sv_backgroundColor">#DF9ACDA9</item>
         <item name="sv_showcaseColor">@color/Text</item>
         <item name="sv_buttonText">@string/ok</item>
     </style>

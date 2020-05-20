@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.swipe.UserSwipeFragment">
+    tools:context="ch.lfg.lfg_source.main.swipe.UserSwipeFragment">
 
     <ProgressBar
         android:id="@+id/circularProgressbar"
@@ -27,18 +27,18 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="50dp"
         android:text="@string/annehmen"
-        android:textSize="15sp"
-        android:textColor="@color/colorPrimary"/>
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="50dp"
         android:text="@string/ablehnen"
-        android:textSize="15sp"
-        android:textColor="#EC1515"/>
+        android:textColor="#EC1515"
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/name"
@@ -55,7 +55,7 @@
         android:layout_below="@+id/circularProgressbar"
         android:layout_margin="8dp"
         android:textSize="15sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/description"

@@ -11,12 +11,12 @@
         android:id="@+id/action_swipe"
         android:enabled="true"
         android:icon="@drawable/ic_view_carousel_24dp"
-        android:title="@string/swipe"/>
+        android:title="@string/swipe" />
 
     <item
         android:id="@+id/action_Matches"
         android:enabled="true"
         android:icon="@drawable/ic_group_24dp"
-        android:title="@string/matches"/>
+        android:title="@string/matches" />
 
 </menu>

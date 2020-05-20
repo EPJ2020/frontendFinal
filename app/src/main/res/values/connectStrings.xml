@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loginConnectString">http://152.96.56.38:8080/User/login</string>
+    <string name="registerConnectString">http://152.96.56.38:8080/User/register</string>
+    <string name="getMyGroupsConnectString">http://152.96.56.38:8080/User/MyGroups</string>
+    <string name="getMatchGroupsConnectString">http://152.96.56.38:8080/User/Matches</string>
+    <string name="getMyProfileConnectString">http://152.96.56.38:8080/User</string>
+    <string name="getUsersConnectString">http://152.96.56.38:8080/Group/Matches/</string>
+    <string name="deleteGroupConnectString">http://152.96.56.38:8080/Group/</string>
+    <string name="updateGroupConnectString">http://152.96.56.38:8080/Group/update</string>
+    <string name="newGroupConnectString">http://152.96.56.38:8080/Group</string>
+    <string name="updateUserConnectString">http://152.96.56.38:8080/User/update</string>
+    <string name="newUserConnectString">http://152.96.56.38:8080/User</string>
+    <string name="getGroupSuggestionsConnectString">http://152.96.56.38:8080/User/Suggestions</string>
+    <string name="getUserSuggestionsConnectString">http://152.96.56.38:8080/Group/Suggestions/</string>
+    <string name="mainUrlConnectString">http://152.96.56.38:8080/</string>
+    <string name="setAnswerConnectStringFragment">/MatchesAnswer</string>
+</resources>
